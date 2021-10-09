@@ -1,0 +1,15 @@
+<mat-card [ngClass]="'mat-elevation-z8'" [ngStyle]="{'height': '650px'}">
+  <mat-card-header>
+    <mat-card-title>Playlist Name</mat-card-title>
+  </mat-card-header>
+  <mat-divider></mat-divider>
+  <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
+    <mat-selection-list>
+      <mat-list-item *ngFor="let shoe of userTestStatus">
+        <mat-icon mat-list-icon>audiotrack</mat-icon>
+        <div mat-line>{{shoe.title}}</div>
+        <div mat-line> {{shoe.artist}} </div>
+      </mat-list-item>
+    </mat-selection-list>
+  </mat-card-content>
+</mat-card>

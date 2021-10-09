@@ -1,0 +1,17 @@
+<mat-selection-list #shoes>
+  <mat-list-option *ngFor="let shoe of userTestStatus" checkboxPosition="before">
+    <div [ngStyle]="{'display': 'inline-block', 'width': '400px'}">
+      <div [ngStyle]="{'float': 'left'}">
+        <div mat-line>{{shoe.name}}</div>
+        <div mat-line> {{shoe.count}} </div>
+      </div>
+      <div [ngStyle]="{'float': 'right'}">
+        <button mat-raised-button color="primary">Open Playlist</button>
+      </div>
+    </div>
+  </mat-list-option>
+</mat-selection-list>
+
+<p>
+  Options selected: {{shoes.selectedOptions.selected.length}}
+</p>
