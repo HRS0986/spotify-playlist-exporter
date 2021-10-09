@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-basic-layout',
@@ -7,7 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BasicLayoutComponent implements OnInit {
 
-  constructor() { }
+  playlistsStatus: string | null = 'all';
+  constructor(private route: ActivatedRoute) {
+    const routeParams = this.route.snapshot.paramMap;
+    this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
+    console.log(this.playlistsStatus);
+  }
 
   ngOnInit(): void {
   }

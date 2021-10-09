@@ -1,17 +1,25 @@
-<mat-selection-list #shoes>
-  <mat-list-option *ngFor="let shoe of userTestStatus" checkboxPosition="before">
-    <div [ngStyle]="{'display': 'inline-block', 'width': '400px'}">
-      <div [ngStyle]="{'float': 'left'}">
-        <div mat-line>{{shoe.name}}</div>
-        <div mat-line> {{shoe.count}} </div>
-      </div>
-      <div [ngStyle]="{'float': 'right'}">
-        <button mat-raised-button color="primary">Open Playlist</button>
-      </div>
-    </div>
-  </mat-list-option>
-</mat-selection-list>
+<mat-card [ngClass]="'mat-elevation-z8'" [ngStyle]="{'height': '90vh'}">
+  <mat-card-header>
+    <mat-card-title>Available Playlists</mat-card-title>
+  </mat-card-header>
+  <hr />
+  <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
+    <mat-selection-list #shoes>
+      <mat-list-option *ngFor="let shoe of userTestStatus" checkboxPosition="before">
+        <div [ngStyle]="{'display': 'inline-block', 'width': '400px'}">
+          <div [ngStyle]="{'float': 'left'}">
+            <div mat-line>{{shoe.name}}</div>
+            <div mat-line> {{shoe.count}} </div>
+          </div>
+          <div [ngStyle]="{'float': 'right'}">
+            <button mat-raised-button color="primary">Open Playlist</button>
+          </div>
+        </div>
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-card-content>
+</mat-card>
 
-<p>
-  Options selected: {{shoes.selectedOptions.selected.length}}
-</p>
+<!--<p>-->
+<!--  Options selected: {{shoes.selectedOptions.selected.length}}-->
+<!--</p>-->

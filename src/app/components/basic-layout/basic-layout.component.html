@@ -1,8 +1,19 @@
+<mat-toolbar [ngStyle]="{'background': '#1ED760', 'margin-bottom':'10px'}">
+  <i class="fab fa-2x fa-spotify"></i>
+  <span>&nbsp; Spotify Playlist Exporter</span>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
 <mat-grid-list cols="4" rowHeight="45vh">
   <mat-grid-tile [colspan]="1" [rowspan]="2" [style.background]="'lightblue'">
     Spotify User Account Data
   </mat-grid-tile>
   <mat-grid-tile [colspan]="3" [rowspan]="2">
-    <app-playlist-items></app-playlist-items>
+    <ng-template [ngIf]="playlistsStatus == 'all'" [ngIfElse]="elseBlock">
+      <app-playlists></app-playlists>
+    </ng-template>
+    <ng-template #elseBlock>
+      <app-playlist-items></app-playlist-items>
+    </ng-template>
   </mat-grid-tile>
 </mat-grid-list>
