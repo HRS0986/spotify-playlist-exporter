@@ -1,8 +1,18 @@
 <mat-card [ngClass]="'mat-elevation-z8'" [ngStyle]="{'height': '90vh'}">
   <mat-card-header>
-    <mat-card-title>Playlist Name</mat-card-title>
+    <div class="d-flex justify-content-between w-100">
+        <mat-card-title class="mb-0"><div class="mt-2">{{playlistName}}</div></mat-card-title>
+      <div>
+      <button mat-button routerLink="../all" style="margin-right: 15px">
+        <mat-icon>arrow_back</mat-icon>&nbsp;Back To Playlists
+      </button>
+        <button mat-flat-button class="btn-sp ml-1">
+          <mat-icon>save_alt</mat-icon>&nbsp;Export To Text
+        </button>
+      </div>
+    </div>
   </mat-card-header>
-  <hr />
+  <hr/>
   <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
     <mat-selection-list>
       <mat-list-item *ngFor="let shoe of userTestStatus">

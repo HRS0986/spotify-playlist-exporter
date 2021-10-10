@@ -1,6 +1,6 @@
 <mat-card [ngClass]="'mat-elevation-z8'" [ngStyle]="{'height': '90vh'}">
   <mat-card-header>
-    <mat-card-title>Available Playlists</mat-card-title>
+    <mat-card-title class="mb-0"><div class="mt-2">Available Playlists</div></mat-card-title>
   </mat-card-header>
   <hr />
   <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
@@ -12,7 +12,7 @@
             <div mat-line> {{shoe.count}} </div>
           </div>
           <div [ngStyle]="{'float': 'right'}">
-            <button mat-raised-button [ngStyle]="{'background-color': '#1ED760'}" routerLink="../{{shoe.name}}">
+            <button mat-raised-button class="btn-sp" routerLink="../{{shoe.name}}">
               <i class="fas fa-external-link-alt"></i>&nbsp;Open Playlist
             </button>
           </div>

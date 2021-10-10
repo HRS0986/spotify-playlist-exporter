@@ -13,7 +13,7 @@
       <app-playlists></app-playlists>
     </ng-template>
     <ng-template #elseBlock>
-      <app-playlist-items></app-playlist-items>
+      <app-playlist-items [playlistName]="playlistName"></app-playlist-items>
     </ng-template>
   </mat-grid-tile>
 </mat-grid-list>

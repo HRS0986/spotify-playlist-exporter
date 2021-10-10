@@ -9,11 +9,15 @@ import { ActivatedRoute } from '@angular/router';
 export class BasicLayoutComponent implements OnInit {
 
   playlistsStatus: string | null = 'all';
+  playlistName: string | null = 'Playlist Name';
   constructor(private route: ActivatedRoute) {
     const routeParams = this.route.snapshot.paramMap;
     this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
     this.route.params.subscribe(params => {
       this.playlistsStatus = params.playlistsStatus;
+      if (this.playlistsStatus !== 'all') {
+        this.playlistName = this.playlistsStatus;
+      }
     });
   }
 
