@@ -4,7 +4,7 @@
   </mat-card-header>
   <hr />
   <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
-    <mat-selection-list #shoes>
+    <mat-selection-list>
       <mat-list-option *ngFor="let shoe of userTestStatus" checkboxPosition="before">
         <div [ngStyle]="{'display': 'inline-block'}">
           <div [ngStyle]="{'float': 'left'}">
@@ -12,7 +12,7 @@
             <div mat-line> {{shoe.count}} </div>
           </div>
           <div [ngStyle]="{'float': 'right'}">
-            <button mat-raised-button [ngStyle]="{'background-color': '#1ED760'}">
+            <button mat-raised-button [ngStyle]="{'background-color': '#1ED760'}" routerLink="../{{shoe.name}}">
               <i class="fas fa-external-link-alt"></i>&nbsp;Open Playlist
             </button>
           </div>
@@ -22,6 +22,3 @@
   </mat-card-content>
 </mat-card>
 
-<!--<p>-->
-<!--  Options selected: {{shoes.selectedOptions.selected.length}}-->
-<!--</p>-->

@@ -12,7 +12,9 @@ export class BasicLayoutComponent implements OnInit {
   constructor(private route: ActivatedRoute) {
     const routeParams = this.route.snapshot.paramMap;
     this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
-    console.log(this.playlistsStatus);
+    this.route.params.subscribe(params => {
+      this.playlistsStatus = params.playlistsStatus;
+    });
   }
 
   ngOnInit(): void {
