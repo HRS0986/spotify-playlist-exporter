@@ -3,6 +3,10 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-pseudo-checkbox-checked {
+  background: #0F0 !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
