@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ExportOptionsComponent } from '../export-options/export-options.component';
 
 @Component({
   selector: 'app-playlists',
@@ -7,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PlaylistsComponent implements OnInit {
 
-  constructor() { }
+  constructor(private dialog: MatDialog) { }
   userTestStatus: Array<{ count: number, name: string }> = Array(
     { count: 0, name: 'Available' },
     { count: 1, name: 'Ready' },
@@ -15,5 +17,14 @@ export class PlaylistsComponent implements OnInit {
   );
 
   ngOnInit(): void {
+  }
+
+  displayExportOptionsDialog(): void {
+    const dialogRef = this.dialog.open(ExportOptionsComponent, {
+      width: '300px'
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+    });
   }
 }

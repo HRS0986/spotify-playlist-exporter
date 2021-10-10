@@ -1,6 +1,16 @@
 <mat-card [ngClass]="'mat-elevation-z8'" [ngStyle]="{'height': '90vh'}">
   <mat-card-header>
+    <div class="d-flex justify-content-between w-100">
     <mat-card-title class="mb-0"><div class="mt-2">Available Playlists</div></mat-card-title>
+    <div>
+      <button mat-flat-button class="btn-sp" style="margin-right: 15px" (click)="displayExportOptionsDialog()">
+        <mat-icon>save_alt</mat-icon>&nbsp;Export Selected
+      </button>
+      <button mat-flat-button class="btn-sp ml-1" (click)="displayExportOptionsDialog()">
+        <mat-icon>save_alt</mat-icon>&nbsp;Export All
+      </button>
+    </div>
+    </div>
   </mat-card-header>
   <hr />
   <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
@@ -12,8 +22,11 @@
             <div mat-line> {{shoe.count}} </div>
           </div>
           <div [ngStyle]="{'float': 'right'}">
-            <button mat-raised-button class="btn-sp" routerLink="../{{shoe.name}}">
+            <button mat-flat-button class="btn-sp" [style]="{'margin-right': '10px'}" routerLink="../{{shoe.name}}">
               <i class="fas fa-external-link-alt"></i>&nbsp;Open Playlist
+            </button>
+            <button mat-flat-button class="btn-sp" (click)="displayExportOptionsDialog()">
+              <mat-icon>save_alt</mat-icon>&nbsp;Export Playlist
             </button>
           </div>
         </div>
