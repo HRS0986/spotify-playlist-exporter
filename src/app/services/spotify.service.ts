@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {SpotifyProfileData, SpotifyRequestUserData} from '../types';
 
 @Injectable({
@@ -15,6 +15,10 @@ export class SpotifyService {
   private redirectUri = 'http%3A%2F%2Flocalhost%3A4200%2F';
   private accessToken!: string;
 
+  private httpOptions = {
+    headers: new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)
+  };
+
   public authorize(): void {
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${this.clientId}&response_type=token&redirect_uri=${this.redirectUri}&scope=${this.scope}`;
     window.location.href = authUrl;
@@ -27,8 +31,7 @@ export class SpotifyService {
   public getUserData(): SpotifyProfileData {
     const endpoint = 'GET https://api.spotify.com/v1/me';
     let userData: {} = {};
-    this.http.get<SpotifyRequestUserData>(endpoint,
-      {headers: new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)}).subscribe(data => {
+    this.http.get<SpotifyRequestUserData>(endpoint, this.httpOptions).subscribe(data => {
       userData = {
         Name: data.display_name,
         Email: data.email,
