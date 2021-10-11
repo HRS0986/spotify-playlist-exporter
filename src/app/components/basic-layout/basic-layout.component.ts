@@ -10,6 +10,8 @@ export class BasicLayoutComponent implements OnInit {
 
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
+  public loading = true;
+
   constructor(private route: ActivatedRoute) {
     const routeParams = this.route.snapshot.paramMap;
     this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
