@@ -9,11 +9,14 @@ import { Router, Event, RouterEvent } from '@angular/router';
 })
 export class StartupComponent implements OnInit {
 
+  public loading = false;
+
   constructor(private spotifyService: SpotifyService, private router: Router) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof RouterEvent) {
         const currentUrl: string = event.url;
         if (currentUrl.includes('#')) {
+          this.loading = true;
           const urlParts: string[] = currentUrl.split('#');
           const params: string[] = urlParts[1].split('&');
           const accessToken: string = params[0].split('=')[1];
