@@ -14,6 +14,7 @@ import { ExportOptionsComponent } from './components/export-options/export-optio
 import { MaterialModule } from './material.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { FormsModule } from '@angular/forms';
     PlaylistItemsComponent,
     BasicLayoutComponent,
     StartupComponent,
-    ExportOptionsComponent
+    ExportOptionsComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,6 +32,7 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     MaterialModule,
     FormsModule,
+    HttpClientModule
   ],
   providers: [
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
