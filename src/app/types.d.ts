@@ -6,7 +6,7 @@ export interface SpotifyRequestUserData {
   followers: object;
   href: string;
   id: string;
-  images: object[];
+  images: Array<{ height: null | number; url: string; width: null | string; }>;
   product: string;
   type: string;
   uri: string;
@@ -17,4 +17,5 @@ export interface SpotifyProfileData {
   Email: string;
   Subscription: string;
   Id: string;
+  ImageUrl: string;
 }

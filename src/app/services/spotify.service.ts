@@ -11,13 +11,11 @@ export class SpotifyService {
   }
 
   private clientId = '4d3ca951d1e44b3e8cb4732bfa790f5d';
-  private scope = 'playlist-read-private';
-  private redirectUri = 'http%3A%2F%2Flocalhost%3A4200%2F';
+  private scope = encodeURIComponent('playlist-read-private user-read-private user-read-email');
+  private redirectUri = encodeURIComponent('http://localhost:4200/');
   private accessToken!: string;
 
-  private httpOptions = {
-    headers: new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)
-  };
+  private httpOptions = { };
 
   public authorize(): void {
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${this.clientId}&response_type=token&redirect_uri=${this.redirectUri}&scope=${this.scope}`;
@@ -26,19 +24,23 @@ export class SpotifyService {
 
   public setAccessToken(token: string): void {
     this.accessToken = token;
+    this.httpOptions = {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)
+    };
   }
 
   public getUserData(): SpotifyProfileData {
-    const endpoint = 'GET https://api.spotify.com/v1/me';
+    const endpoint = 'https://api.spotify.com/v1/me';
     let userData: {} = {};
     this.http.get<SpotifyRequestUserData>(endpoint, this.httpOptions).subscribe(data => {
       userData = {
         Name: data.display_name,
         Email: data.email,
         Subscription: data.product,
-        Id: data.id
+        Id: data.id,
+        ImageUrl: data.images[0].url
       };
-    }).unsubscribe();
+    });
     return userData as SpotifyProfileData;
   }
 

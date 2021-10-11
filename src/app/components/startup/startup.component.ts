@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../../services/spotify.service';
 import { Router, Event, RouterEvent } from '@angular/router';
+import { SpotifyProfileData } from '../../types';
 
 @Component({
   selector: 'app-startup',
@@ -21,6 +22,8 @@ export class StartupComponent implements OnInit {
           const params: string[] = urlParts[1].split('&');
           const accessToken: string = params[0].split('=')[1];
           spotifyService.setAccessToken(accessToken);
+          const userData: SpotifyProfileData = spotifyService.getUserData();
+          console.log(userData.Name);
         }
       }
     });
