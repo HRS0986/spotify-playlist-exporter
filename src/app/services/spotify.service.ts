@@ -13,7 +13,7 @@ export class SpotifyService {
   }
 
   private clientId = '4d3ca951d1e44b3e8cb4732bfa790f5d';
-  private scope = encodeURIComponent('playlist-read-private user-read-private user-read-email');
+  private scope = encodeURIComponent('playlist-read-private user-read-private user-read-email playlist-read-collaborative');
   private redirectUri = encodeURIComponent('http://localhost:4200/');
   private okToPlaylists = false;
 
