@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SpotifyProfileData, SpotifyRequestUserData } from '../types';
+import { SpotifyRequestUserData } from '../types';
 import { TokenStorageService } from './token-storage.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,23 +30,13 @@ export class SpotifyService {
     this.okToPlaylists = status;
   }
 
-  public getUserData(): SpotifyProfileData {
+  public getUserData(): Observable<SpotifyRequestUserData> {
     const accessToken = this.tokenStorageService.getFromSessionStorage('SpotifyAccessToken');
     const httpOptions = {
       headers: new HttpHeaders().set('Authorization', `Bearer ${accessToken}`)
     };
     const endpoint = 'https://api.spotify.com/v1/me';
-    let userData: {} = {};
-    this.http.get<SpotifyRequestUserData>(endpoint, httpOptions).subscribe(data => {
-      userData = {
-        Name: data.display_name,
-        Email: data.email,
-        Subscription: data.product,
-        Id: data.id,
-        ImageUrl: data.images[0].url
-      };
-    });
-    return userData as SpotifyProfileData;
+    return this.http.get<SpotifyRequestUserData>(endpoint, httpOptions);
   }
 
 }
