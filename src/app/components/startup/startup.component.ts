@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyService } from '../../services/spotify.service';
 import { Router, Event, RouterEvent } from '@angular/router';
-import { SpotifyProfileData } from '../../types';
+import { TokenStorageService } from '../../services/token-storage.service';
 
 @Component({
   selector: 'app-startup',
@@ -12,7 +12,7 @@ export class StartupComponent implements OnInit {
 
   public loading = false;
 
-  constructor(private spotifyService: SpotifyService, private router: Router) {
+  constructor(private spotifyService: SpotifyService, private router: Router, private tokenStorageService: TokenStorageService) {
     this.router.events.subscribe((event: Event) => {
 
       if (event instanceof RouterEvent) {
@@ -25,8 +25,7 @@ export class StartupComponent implements OnInit {
           const params: string[] = urlParts[1].split('&');
           const accessToken: string = params[0].split('=')[1];
 
-          spotifyService.setAccessToken(accessToken);
-          const userData: SpotifyProfileData = spotifyService.getUserData();
+          this.tokenStorageService.saveToSessionStorage(accessToken, 'SpotifyAccessToken');
           this.loading = false;
           this.router.navigate(['/playlists/all']);
         }
@@ -45,6 +44,12 @@ export class StartupComponent implements OnInit {
   }
 
   public startAuth(): void {
-    this.spotifyService.authorize();
+    const token = this.tokenStorageService.getFromSessionStorage('SpotifyAccessToken');
+    if (!token) {
+      this.spotifyService.authorize();
+    } else {
+      this.router.navigate(['/playlists/all']);
+    }
+    this.spotifyService.setPlaylistsRouteStatus(true);
   }
 }

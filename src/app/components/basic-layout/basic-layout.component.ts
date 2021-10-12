@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SpotifyService } from '../../services/spotify.service';
+import { SpotifyProfileData } from '../../types';
 
 @Component({
   selector: 'app-basic-layout',
@@ -10,7 +12,7 @@ export class BasicLayoutComponent implements OnInit {
 
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
     const routeParams = this.route.snapshot.paramMap;
     this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
     this.route.params.subscribe(params => {
@@ -22,6 +24,8 @@ export class BasicLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const userData: SpotifyProfileData = this.spotifyService.getUserData();
+    console.log(userData);
   }
 
 }
