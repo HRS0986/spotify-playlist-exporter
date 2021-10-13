@@ -4,6 +4,18 @@
   <span></span>
 </mat-toolbar>
 
+
+<ng-template [ngIf]="loading" [ngIfElse]="elseBlock">
+  <div class="container d-flex align-content-center flex-wrap"  style="height: 100vh;">
+    <div class="row d-flex justify-content-center w-100">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div class="row w-100 mt-5">
+      <p class="mat-display-2 d-flex justify-content-center">Please Wait</p>
+    </div>
+  </div>
+</ng-template>
+<ng-template #elseBlock>
 <mat-grid-list cols="4" rowHeight="45vh">
   <mat-grid-tile [colspan]="1" [rowspan]="2" [style.background]="'lightblue'">
 
@@ -32,3 +44,4 @@
     </ng-template>
   </mat-grid-tile>
 </mat-grid-list>
+</ng-template>
