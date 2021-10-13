@@ -13,9 +13,51 @@ export interface SpotifyRequestUserData {
 }
 
 export interface SpotifyProfileData {
-  Name: string;
-  Email: string;
-  Subscription: string;
-  Id: string;
-  ImageUrl: string;
+  name: string;
+  email: string;
+  subscription: string;
+  id: string;
+  imageUrl: string;
+}
+
+export interface SpotifyPlaylistsApiObject {
+  href: string;
+  items: SpotifyPlaylistApiObject[];
+  limit: number;
+  next: null;
+  offset: number;
+  previous: null;
+  total: number;
+}
+
+interface SpotifyPlaylistApiObject {
+  collaborative: boolean;
+  external_urls: object;
+  href: string;
+  id: string;
+  images: [];
+  name: string;
+  owner: {
+    external_urls: object;
+    href: string;
+    id: string;
+    type: string;
+    uri: string;
+  };
+  public: boolean;
+  snapshot_id: string;
+  tracks: {
+    href: string;
+    total: number;
+  };
+  type: string;
+  uri: string;
+}
+
+export interface SpotifyPlaylist {
+  collaborative: boolean;
+  id: string;
+  name: string;
+  public: boolean;
+  tracksCount: number;
 }
