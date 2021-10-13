@@ -22,7 +22,7 @@ export interface SpotifyProfileData {
 
 export interface SpotifyPlaylistsApiObject {
   href: string;
-  items: SpotifyPlaylistApiObject[];
+  items: Array<SpotifyPlaylistApiObject>;
   limit: number;
   next: null;
   offset: number;
@@ -58,6 +58,6 @@ export interface SpotifyPlaylist {
   collaborative: boolean;
   id: string;
   name: string;
-  public: boolean;
+  publicStatus: boolean;
   tracksCount: number;
 }

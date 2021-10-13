@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SpotifyService } from '../../services/spotify.service';
 import { SpotifyProfileData } from '../../types';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './basic-layout.component.html',
   styleUrls: ['./basic-layout.component.css']
 })
-export class BasicLayoutComponent implements OnInit {
+export class BasicLayoutComponent implements OnInit, OnDestroy  {
 
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
@@ -40,6 +40,13 @@ export class BasicLayoutComponent implements OnInit {
     });
     this.loading = false;
     this.subscriptions.push(userDataSubscription);
+  }
+
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }
