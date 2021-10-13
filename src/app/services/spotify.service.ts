@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SpotifyRequestUserData, SpotifyPlaylistsApiObject } from '../types';
 import { Observable } from 'rxjs';
+import { PLAYLISTS_LIMIT } from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -35,8 +36,8 @@ export class SpotifyService {
     return this.http.get<SpotifyRequestUserData>(endpoint);
   }
 
-  public getAllPlaylists(): Observable<SpotifyPlaylistsApiObject> {
-    const endpoint = `${this.baseUrl}me/playlists`;
+  public getAllPlaylists(offset: number): Observable<SpotifyPlaylistsApiObject> {
+    const endpoint = `${this.baseUrl}me/playlists?limit=${PLAYLISTS_LIMIT}&offset=${offset}`;
     return this.http.get<SpotifyPlaylistsApiObject>(endpoint);
   }
 

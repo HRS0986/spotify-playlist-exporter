@@ -4,6 +4,7 @@ import { ExportOptionsComponent } from '../export-options/export-options.compone
 import { SpotifyService } from '../../services/spotify.service';
 import { SpotifyPlaylist } from '../../types';
 import { Subscription } from 'rxjs';
+import { PLAYLISTS_LIMIT, INITIAL_OFFSET } from '../../constants';
 
 @Component({
   selector: 'app-playlists',
@@ -15,12 +16,24 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
   playlists: SpotifyPlaylist[] = [];
   loading = false;
   subscriptions: Subscription[] = [];
+  playlistsTotal!: number;
 
   constructor(private dialog: MatDialog, private spotifyService: SpotifyService) { }
 
   ngOnInit(): void {
     this.loading = true;
-    const playlistsSubscription: Subscription = this.spotifyService.getAllPlaylists().subscribe(data => {
+    this.getPlaylists(INITIAL_OFFSET);
+    const playlistsRemainder = this.playlistsTotal % PLAYLISTS_LIMIT;
+    const requestsCount = Math.floor(this.playlistsTotal / PLAYLISTS_LIMIT) + Number(playlistsRemainder);
+    for (let i = 1; i <= requestsCount; i++) {
+      this.getPlaylists(i);
+    }
+    this.loading = false;
+  }
+
+  private getPlaylists(offset: number): void {
+    const playlistsSubscription: Subscription = this.spotifyService.getAllPlaylists(offset).subscribe(data => {
+      this.playlistsTotal = data.total;
       for (const playlist of data.items) {
         const playlistsObject: SpotifyPlaylist = {
           name: playlist.name,
@@ -32,7 +45,6 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
         this.playlists.push(playlistsObject);
       }
     });
-    this.loading = false;
     this.subscriptions.push(playlistsSubscription);
   }
 
