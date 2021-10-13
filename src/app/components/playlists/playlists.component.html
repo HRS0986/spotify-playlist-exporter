@@ -28,14 +28,23 @@
   <ng-template #elseBlock>
     <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
       <mat-selection-list>
-        <mat-list-option *ngFor="let shoe of userTestStatus" checkboxPosition="before">
+        <mat-list-option *ngFor="let playlist of playlists" checkboxPosition="before">
           <div [ngStyle]="{'display': 'inline-block'}">
-            <div [ngStyle]="{'float': 'left'}">
-              <div mat-line>{{shoe.name}}</div>
-              <div mat-line> {{shoe.count}} </div>
+            <div [ngStyle]="{'float': 'left', 'display': 'flex'}">
+              <div [style]="{'margin-right': '5px'}">
+                <div mat-line>{{playlist.name}}</div>
+                <div mat-line> {{playlist.tracksCount}} Tracks</div>
+              </div>
+              <div [style]="{'margin-right': '5px'}">
+                <mat-icon [hidden]="!playlist.publicStatus">lock</mat-icon>
+                <mat-icon [hidden]="playlist.publicStatus">lock_open</mat-icon>
+              </div>
+              <div>
+                <mat-icon [hidden]="!playlist.collaborative">groups</mat-icon>
+              </div>
             </div>
             <div [ngStyle]="{'float': 'right'}">
-              <button mat-flat-button class="btn-sp" [style]="{'margin-right': '10px'}" routerLink="../{{shoe.name}}">
+              <button mat-flat-button class="btn-sp" [style]="{'margin-right': '10px'}" routerLink="../{{playlist.name}}">
                 <i class="fas fa-external-link-alt"></i>&nbsp;Open Playlist
               </button>
               <button mat-flat-button class="btn-sp" (click)="displayExportOptionsDialog()">

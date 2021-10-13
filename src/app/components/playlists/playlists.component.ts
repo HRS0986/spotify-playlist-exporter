@@ -17,11 +17,6 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
   subscriptions: Subscription[] = [];
 
   constructor(private dialog: MatDialog, private spotifyService: SpotifyService) { }
-  userTestStatus: Array<{ count: number, name: string }> = Array(
-    { count: 0, name: 'Available' },
-    { count: 1, name: 'Ready' },
-    { count: 2, name: 'Started' }
-  );
 
   ngOnInit(): void {
     this.loading = true;
