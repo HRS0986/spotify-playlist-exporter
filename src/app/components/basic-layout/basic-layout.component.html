@@ -4,7 +4,6 @@
   <span></span>
 </mat-toolbar>
 
-
 <ng-template [ngIf]="loading" [ngIfElse]="elseBlock">
   <div class="container d-flex align-content-center flex-wrap"  style="height: 100vh;">
     <div class="row d-flex justify-content-center w-100">
@@ -37,7 +36,7 @@
   </mat-grid-tile>
   <mat-grid-tile [colspan]="3" [rowspan]="2">
     <ng-template [ngIf]="playlistsStatus == 'all'" [ngIfElse]="elseBlock">
-      <app-playlists></app-playlists>
+      <app-playlists [style]="{'width': '97%'}"></app-playlists>
     </ng-template>
     <ng-template #elseBlock>
       <app-playlist-items [playlistName]="playlistName"></app-playlist-items>
