@@ -14,6 +14,7 @@ export class BasicLayoutComponent implements OnInit {
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
   userData!: SpotifyProfileData;
+  loading = false;
   subscriptions: Subscription[] = [];
   constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
     const routeParams = this.route.snapshot.paramMap;
@@ -27,6 +28,7 @@ export class BasicLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     const userDataSubscription: Subscription = this.spotifyService.getUserData().subscribe(data => {
       this.userData = {
         name: data.display_name,
@@ -36,6 +38,7 @@ export class BasicLayoutComponent implements OnInit {
         subscription: data.product
       };
     });
+    this.loading = false;
     this.subscriptions.push(userDataSubscription);
   }
 
