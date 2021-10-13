@@ -14,8 +14,9 @@ import { ExportOptionsComponent } from './components/export-options/export-optio
 import { MaterialModule } from './material.module';
 import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
 import { PlaylistGuard } from './guards/playlist.guard';
+import { TokenInterceptor } from './helpers/token.interceptor';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { PlaylistGuard } from './guards/playlist.guard';
   ],
   providers: [
     PlaylistGuard,
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
   entryComponents: [ExportOptionsComponent],

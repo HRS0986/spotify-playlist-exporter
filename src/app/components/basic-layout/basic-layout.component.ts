@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SpotifyService } from '../../services/spotify.service';
-import { SpotifyRequestUserData } from '../../types';
+import { SpotifyProfileData } from '../../types';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,12 +9,12 @@ import { Subscription } from 'rxjs';
   templateUrl: './basic-layout.component.html',
   styleUrls: ['./basic-layout.component.css']
 })
-export class BasicLayoutComponent implements OnInit {
+export class BasicLayoutComponent implements OnInit, OnDestroy  {
 
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
+  userData!: SpotifyProfileData;
   loading = false;
-  userData!: SpotifyRequestUserData;
   subscriptions: Subscription[] = [];
   constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
     const routeParams = this.route.snapshot.paramMap;
@@ -30,10 +30,23 @@ export class BasicLayoutComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     const userDataSubscription: Subscription = this.spotifyService.getUserData().subscribe(data => {
-      this.userData = data;
+      this.userData = {
+        name: data.display_name,
+        email: data.email,
+        id: data.id,
+        imageUrl: data.images[0].url,
+        subscription: data.product
+      };
     });
     this.loading = false;
     this.subscriptions.push(userDataSubscription);
+  }
+
+
+  ngOnDestroy(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }

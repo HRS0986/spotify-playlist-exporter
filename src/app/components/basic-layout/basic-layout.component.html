@@ -24,12 +24,12 @@
         <div mat-card-avatar></div>
         <mat-card-title>Profile Data</mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="{{userData.images[0].url}}" alt="Photo of a Shiba Inu">
+      <img mat-card-image src="{{userData.imageUrl}}" alt="Photo of a Shiba Inu">
       <mat-card-content>
         <mat-list>
-          <mat-list-item>{{userData.display_name}}</mat-list-item>
+          <mat-list-item>{{userData.name}}</mat-list-item>
           <mat-list-item>{{userData.email}}</mat-list-item>
-          <mat-list-item>{{userData.product}}</mat-list-item>
+          <mat-list-item>{{userData.subscription}}</mat-list-item>
         </mat-list>
       </mat-card-content>
     </mat-card>
