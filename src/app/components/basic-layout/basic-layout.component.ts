@@ -13,6 +13,7 @@ export class BasicLayoutComponent implements OnInit {
 
   playlistsStatus: string | null = 'all';
   playlistName: string | null = 'Playlist Name';
+  loading = false;
   userData!: SpotifyRequestUserData;
   subscriptions: Subscription[] = [];
   constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
@@ -27,9 +28,11 @@ export class BasicLayoutComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading = true;
     const userDataSubscription: Subscription = this.spotifyService.getUserData().subscribe(data => {
       this.userData = data;
     });
+    this.loading = false;
     this.subscriptions.push(userDataSubscription);
   }
 
