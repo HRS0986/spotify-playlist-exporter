@@ -23,7 +23,7 @@
         <div mat-card-avatar></div>
         <mat-card-title>Profile Data</mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="{{userData.imageUrl}}" alt="Photo of a Shiba Inu">
+      <img mat-card-image src="{{userData.imageUrl}}" alt="User Profile Picture">
       <mat-card-content>
         <mat-list>
           <mat-list-item>{{userData.name}}</mat-list-item>
@@ -39,7 +39,7 @@
       <app-playlists [style]="{'width': '97%'}"></app-playlists>
     </ng-template>
     <ng-template #elseBlock>
-      <app-playlist-items [playlistName]="playlistName"></app-playlist-items>
+      <app-playlist-items [playlistId]="playlistId"></app-playlist-items>
     </ng-template>
   </mat-grid-tile>
 </mat-grid-list>

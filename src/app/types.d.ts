@@ -147,7 +147,7 @@ export interface SpotifyTrack {
   title: string;
   album: string;
   artists: string[];
-  duration: number;
+  duration: string;
   explicit: boolean;
   url: string;
 }

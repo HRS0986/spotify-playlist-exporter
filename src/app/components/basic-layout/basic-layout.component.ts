@@ -12,17 +12,18 @@ import { Subscription } from 'rxjs';
 export class BasicLayoutComponent implements OnInit, OnDestroy  {
 
   playlistsStatus: string | null = 'all';
-  playlistName: string | null = 'Playlist Name';
+  playlistId!: string;
   userData!: SpotifyProfileData;
   loading = false;
   subscriptions: Subscription[] = [];
+
   constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
     const routeParams = this.route.snapshot.paramMap;
     this.playlistsStatus = routeParams.get('playlistsStatus') ? routeParams.get('playlistsStatus') : 'all';
     this.route.params.subscribe(params => {
       this.playlistsStatus = params.playlistsStatus;
       if (this.playlistsStatus !== 'all') {
-        this.playlistName = this.playlistsStatus;
+        this.playlistId = this.playlistsStatus as string;
       }
     });
   }
