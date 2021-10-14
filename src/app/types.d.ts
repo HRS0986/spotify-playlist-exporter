@@ -1,4 +1,4 @@
-export interface SpotifyRequestUserData {
+export interface SpotifyUserDataApiObject {
   country: string;
   display_name: string;
   email: string;
@@ -22,6 +22,92 @@ export interface SpotifyProfileData {
 
 export interface SpotifyPlaylistsApiObject extends SpotifyApiObject {
   items: Array<SpotifyPlaylistApiObject>;
+}
+
+export interface SpotifyPlaylist {
+  collaborative: boolean;
+  id: string;
+  name: string;
+  publicStatus: boolean;
+  tracksCount: number;
+}
+
+export interface SpotifyTrackListApiObject extends SpotifyApiObject{
+  items: Array<SpotifyTrackApiObject>;
+}
+
+interface SpotifyTrackApiObject {
+  added_at: string;
+  added_by: {
+    external_urls: {
+      spotify: string;
+    };
+    href: string;
+    id: string;
+    type: string;
+    uri: string;
+  };
+  is_local: boolean;
+  primary_color: null;
+  track: TrackApiObject;
+  video_thumbnail: {
+    url: string | null;
+  };
+}
+
+interface TrackApiObject {
+  album: AlbumApiObject;
+  artists: Array<ArtistApiObject>;
+  available_markets: string[];
+  disc_number: number;
+  duration_ms: number;
+  episode: boolean;
+  explicit: boolean;
+  external_ids: {
+    isrc: string;
+  };
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  is_local: boolean;
+  name: string;
+  popularity: number;
+  preview_url: string;
+  track: boolean;
+  track_number: number;
+  type: string;
+  uri: string;
+}
+
+interface AlbumApiObject {
+  album_type: string;
+  artists: Array<ArtistApiObject>;
+  available_markets: string[];
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  images: Array<{ height: number; url: string; width: string; }>;
+  name: string;
+  release_date: string;
+  release_date_precision: string;
+  total_tracks: number;
+  type: string;
+  uri: string;
+}
+
+interface ArtistApiObject {
+  external_urls: {
+    spotify: string;
+  };
+  href: string;
+  id: string;
+  name: string;
+  type: string;
+  uri: string;
 }
 
 interface SpotifyPlaylistApiObject {
@@ -48,91 +134,6 @@ interface SpotifyPlaylistApiObject {
   uri: string;
 }
 
-export interface SpotifyPlaylist {
-  collaborative: boolean;
-  id: string;
-  name: string;
-  publicStatus: boolean;
-  tracksCount: number;
-}
-
-export interface SpotifyTrackListApiObject extends SpotifyApiObject{
-  items: Array<SpotifyTrackApiObject>;
-}
-
-interface SpotifyTrackApiObject {
-  added_at: string;
-  added_by: {
-    external_urls: {
-      spotify: string;
-    };
-    href: string;
-    id: string;
-    type: string;
-    uri: string;
-    is_local: boolean;
-    primary_color: null;
-    track: TrackObject;
-    video_thumbnail: {
-      url: string | null;
-    }
-  };
-}
-
-interface TrackObject {
-  artists: Array<ArtistObject>;
-  available_markets: string[];
-  disc_number: number;
-  duration_ms: number;
-  episode: boolean;
-  explicit: boolean;
-  external_ids: {
-    isrc: string;
-  };
-  external_urls: {
-    spotify: string;
-  };
-  href: string;
-  id: string;
-  is_local: boolean;
-  name: string;
-  popularity: number;
-  preview_url: string;
-  track: boolean;
-  track_number: number;
-  type: string;
-  uri: string;
-}
-
-interface AlbumObject {
-  album_type: string;
-  artists: Array<ArtistObject>;
-  available_markets: string[];
-  external_urls: {
-    spotify: string;
-  };
-  href: string;
-  id: string;
-  images: Array<{ height: number; url: string; width: string; }>;
-  name: string;
-  release_date: string;
-  release_date_precision: string;
-  total_tracks: number;
-  type: string;
-  uri: string;
-}
-
-interface ArtistObject {
-  external_urls: {
-    spotify: string;
-  };
-  href: string;
-  id: string;
-  name: string;
-  type: string;
-  uri: string;
-}
-
 interface SpotifyApiObject {
   href: string;
   limit: number;
@@ -140,4 +141,13 @@ interface SpotifyApiObject {
   offset: number;
   previous: null;
   total: number;
+}
+
+export interface SpotifyTrack {
+  title: string;
+  album: string;
+  artists: string[];
+  duration: number;
+  explicit: boolean;
+  url: string;
 }
