@@ -36,11 +36,11 @@
                 <div mat-line> {{playlist.tracksCount}} Tracks</div>
               </div>
               <div [style]="{'margin-right': '5px'}">
-                <mat-icon [hidden]="!playlist.publicStatus">lock</mat-icon>
-                <mat-icon [hidden]="playlist.publicStatus">lock_open</mat-icon>
+                <mat-icon matTooltip="Private Playlist" [hidden]="!playlist.publicStatus">lock</mat-icon>
+                <mat-icon matTooltip="Public Playlist" [hidden]="playlist.publicStatus">lock_open</mat-icon>
               </div>
               <div>
-                <mat-icon [hidden]="!playlist.collaborative">groups</mat-icon>
+                <mat-icon matTooltip="Collaborative Playlist" [hidden]="!playlist.collaborative">folder_shared</mat-icon>
               </div>
             </div>
             <div [ngStyle]="{'float': 'right'}">
