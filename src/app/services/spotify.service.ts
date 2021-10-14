@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { SpotifyRequestUserData, SpotifyPlaylistsApiObject } from '../types';
 import { Observable } from 'rxjs';
 import { PLAYLISTS_LIMIT } from '../constants';
+import { SpotifyUserDataApiObject, SpotifyPlaylistsApiObject, SpotifyTrackListApiObject } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +31,9 @@ export class SpotifyService {
     this.okToPlaylists = status;
   }
 
-  public getUserData(): Observable<SpotifyRequestUserData> {
+  public getUserData(): Observable<SpotifyUserDataApiObject> {
     const endpoint = `${this.baseUrl}me`;
-    return this.http.get<SpotifyRequestUserData>(endpoint);
+    return this.http.get<SpotifyUserDataApiObject>(endpoint);
   }
 
   public getAllPlaylists(offset: number): Observable<SpotifyPlaylistsApiObject> {
@@ -41,8 +41,29 @@ export class SpotifyService {
     return this.http.get<SpotifyPlaylistsApiObject>(endpoint);
   }
 
-  public getPlaylist(): void {
+  public getPlaylistItems(playlistId: string, fields: string[], offset: number): Observable<SpotifyTrackListApiObject> {
+    const fieldString = this.createFieldsString(fields);
+    const endpoint = `${this.baseUrl}me/playlists/${playlistId}/tracks?limit==${PLAYLISTS_LIMIT}&offset=${offset}&${fieldString}`;
+    return this.http.get<SpotifyTrackListApiObject>(endpoint);
+  }
 
+  private createFieldsString(fields: string[]): string {
+    let fieldString = 'fields=limit%2Ctotal%2C';
+    let trackString = 'items(track(';
+    for (const field of fields) {
+      if (field !== 'album' && field !== 'artist') {
+        trackString += `${field},`;
+      }
+    }
+    if (fields.includes('album')) {
+      trackString += 'album(name),';
+    }
+    if (fields.includes('artist')) {
+      trackString += 'artists(name)';
+    }
+    trackString += '))';
+    fieldString += encodeURIComponent(trackString);
+    return fieldString;
   }
 
 }
