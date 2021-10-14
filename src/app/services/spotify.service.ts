@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL } from '../constants';
-import { SpotifyUserDataApiObject, SpotifyPlaylistsApiObject, SpotifyTrackListApiObject } from '../types';
+import { SpotifyUserDataApiObject, SpotifyPlaylistsApiObject, SpotifyTrackListApiObject, PlaylistMetaData } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -44,6 +44,12 @@ export class SpotifyService {
     const fieldString = 'limit%2Ctotal%2Citems(track(name%2Chref%2Cduration_ms%2Cexplicit%2Calbum(name)%2Cartists(name)))';
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${offset}&fields=${fieldString}`;
     return this.http.get<SpotifyTrackListApiObject>(endpoint);
+  }
+
+  public getPlaylistMetaData(playlistId: string): Observable<PlaylistMetaData> {
+    const fieldString = 'collaborative%2Cdescription%2Cfollowers(total)%2Cid%2Cname%2Cpublic';
+    const endpoint = `${BASE_API_URL}playlists/${playlistId}?fields=${fieldString}`;
+    return this.http.get<PlaylistMetaData>(endpoint);
   }
 
 }

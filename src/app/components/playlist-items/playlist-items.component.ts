@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ExportOptionsComponent } from '../export-options/export-options.component';
 import { SpotifyService } from '../../services/spotify.service';
 import { Subscription } from 'rxjs';
-import { SpotifyTrack } from '../../types';
+import { PlaylistMetaData, SpotifyTrack } from '../../types';
 import { INITIAL_OFFSET, PLAYLIST_ITEM_LIMIT } from '../../constants';
 
 @Component({
@@ -18,6 +18,7 @@ export class PlaylistItemsComponent implements OnInit {
   loading = false;
   subscriptions: Subscription[] = [];
   playlistItems: SpotifyTrack[] = [];
+  playlistMetaData!: PlaylistMetaData;
   totalTracksCount = 0;
 
   constructor(private dialog: MatDialog, private spotifyService: SpotifyService) { }
@@ -30,6 +31,10 @@ export class PlaylistItemsComponent implements OnInit {
     for (let i = 1; i <= requestsCount; i++) {
       this.getPlaylistItems(this.playlistId, i);
     }
+    const playlistMetaDataSubscription: Subscription = this.spotifyService.getPlaylistMetaData(this.playlistId).subscribe(data => {
+      this.playlistMetaData = data;
+    });
+    this.subscriptions.push(playlistMetaDataSubscription);
     this.loading = false;
   }
 

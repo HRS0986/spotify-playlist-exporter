@@ -36,6 +36,17 @@ export interface SpotifyTrackListApiObject extends SpotifyApiObject{
   items: Array<SpotifyTrackApiObject>;
 }
 
+export interface PlaylistMetaData {
+  collaborative: boolean;
+  description: string;
+  followers: {
+    total: number;
+  };
+  id: string;
+  name: string;
+  public: boolean;
+}
+
 interface SpotifyTrackApiObject {
   added_at: string;
   added_by: {
@@ -137,9 +148,9 @@ interface SpotifyPlaylistApiObject {
 interface SpotifyApiObject {
   href: string;
   limit: number;
-  next: null;
+  next: string | null;
   offset: number;
-  previous: null;
+  previous: string | null;
   total: number;
 }
 
