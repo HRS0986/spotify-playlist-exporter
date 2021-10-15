@@ -1,5 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TRACK_FIELDS } from '../../constants';
+import { TrackField } from '../../types';
 
 @Component({
   selector: 'app-export-options',
@@ -9,13 +11,12 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ExportOptionsComponent implements OnInit {
 
   selectedFields: string[] = [];
+  trackFields: TrackField[] = TRACK_FIELDS;
 
   constructor(
     private dialogRef: MatDialogRef<ExportOptionsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: string[]
   ) { }
-
-  typesOfShoes: string[] = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
 
   ngOnInit(): void {
   }

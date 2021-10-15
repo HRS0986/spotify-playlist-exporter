@@ -119,3 +119,8 @@ export interface Track {
   explicit: boolean;
   url: string;
 }
+
+export interface TrackField {
+  field: string;
+  checked: boolean;
+}
