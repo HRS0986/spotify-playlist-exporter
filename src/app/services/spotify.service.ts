@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL } from '../constants';
-import { SpotifyUserDataApiObject, SpotifyPlaylistsApiObject, SpotifyTrackListApiObject, PlaylistMetaData } from '../types';
+import { SpotifyPlaylistsList, SpotifyTrackList, PlaylistMetaData, SpotifyProfileData } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -30,20 +30,20 @@ export class SpotifyService {
     this.okToPlaylists = status;
   }
 
-  public getUserData(): Observable<SpotifyUserDataApiObject> {
+  public getUserData(): Observable<SpotifyProfileData> {
     const endpoint = `${BASE_API_URL}me`;
-    return this.http.get<SpotifyUserDataApiObject>(endpoint);
+    return this.http.get<SpotifyProfileData>(endpoint);
   }
 
-  public getAllPlaylists(offset: number): Observable<SpotifyPlaylistsApiObject> {
+  public getAllPlaylists(offset: number): Observable<SpotifyPlaylistsList> {
     const endpoint = `${BASE_API_URL}me/playlists?limit=${PLAYLISTS_LIMIT}&offset=${offset}`;
-    return this.http.get<SpotifyPlaylistsApiObject>(endpoint);
+    return this.http.get<SpotifyPlaylistsList>(endpoint);
   }
 
-  public getPlaylistItems(playlistId: string, offset: number): Observable<SpotifyTrackListApiObject> {
+  public getPlaylistItems(playlistId: string, offset: number): Observable<SpotifyTrackList> {
     const fieldString = 'limit%2Ctotal%2Citems(track(name%2Chref%2Cduration_ms%2Cexplicit%2Calbum(name)%2Cartists(name)))';
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${offset}&fields=${fieldString}`;
-    return this.http.get<SpotifyTrackListApiObject>(endpoint);
+    return this.http.get<SpotifyTrackList>(endpoint);
   }
 
   public getPlaylistMetaData(playlistId: string): Observable<PlaylistMetaData> {
