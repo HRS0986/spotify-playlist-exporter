@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL } from '../constants';
-import { SpotifyPlaylistsList, SpotifyTrackList, PlaylistMetaData, SpotifyProfileData } from '../types';
+import { SpotifyPlaylistsList, SpotifyTrackList, PlaylistMetaData, SpotifyUserDataApiObject } from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -30,9 +30,9 @@ export class SpotifyService {
     this.okToPlaylists = status;
   }
 
-  public getUserData(): Observable<SpotifyProfileData> {
+  public getUserData(): Observable<SpotifyUserDataApiObject> {
     const endpoint = `${BASE_API_URL}me`;
-    return this.http.get<SpotifyProfileData>(endpoint);
+    return this.http.get<SpotifyUserDataApiObject>(endpoint);
   }
 
   public getAllPlaylists(offset: number): Observable<SpotifyPlaylistsList> {
@@ -41,7 +41,7 @@ export class SpotifyService {
   }
 
   public getPlaylistItems(playlistId: string, offset: number): Observable<SpotifyTrackList> {
-    const fieldString = 'limit%2Ctotal%2Citems(track(name%2Chref%2Cduration_ms%2Cexplicit%2Calbum(name)%2Cartists(name)))';
+    const fieldString = 'limit%2Ctotal%2Citems(track(name%2Cexternal_urls(spotify)%2Cduration_ms%2Cexplicit%2Calbum(name)%2Cartists(name)))';
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${offset}&fields=${fieldString}`;
     return this.http.get<SpotifyTrackList>(endpoint);
   }
