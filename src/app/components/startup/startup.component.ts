@@ -4,7 +4,6 @@ import { Router, Event, RouterEvent } from '@angular/router';
 import { TokenStorageService } from '../../services/token-storage.service';
 import { BIG_TITLE, SPOTIFY_TOKEN } from '../../constants';
 
-
 @Component({
   selector: 'app-startup',
   templateUrl: './startup.component.html',
