@@ -24,7 +24,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
     this.loading = true;
     this.getPlaylists(INITIAL_OFFSET);
     const playlistsRemainder = this.playlistsTotal % PLAYLISTS_LIMIT;
-    const requestsCount = Math.floor(this.playlistsTotal / PLAYLISTS_LIMIT) + Number(playlistsRemainder);
+    const requestsCount = Math.floor(this.playlistsTotal / PLAYLISTS_LIMIT) + Number(playlistsRemainder) - 1;
     for (let i = 1; i <= requestsCount; i++) {
       this.getPlaylists(i);
     }

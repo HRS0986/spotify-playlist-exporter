@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ExportOptionsComponent } from '../export-options/export-options.component';
 import { SpotifyService } from '../../services/spotify.service';
 import { Subscription } from 'rxjs';
-import { PlaylistMetaData, DisplayTrackObject } from '../../types';
+import { PlaylistMetaData, DisplayTrackObject, DialogResult } from '../../types';
 import { INITIAL_OFFSET, PLAYLIST_ITEM_LIMIT } from '../../constants';
 
 @Component({
@@ -27,7 +27,7 @@ export class PlaylistItemsComponent implements OnInit {
     this.loading = true;
     this.getPlaylistItems(this.playlistId, INITIAL_OFFSET);
     const playlistItemsRemainder = this.totalTracksCount % PLAYLIST_ITEM_LIMIT;
-    const requestsCount = Math.floor(this.totalTracksCount / PLAYLIST_ITEM_LIMIT) + Number(playlistItemsRemainder);
+    const requestsCount = Math.floor(this.totalTracksCount / PLAYLIST_ITEM_LIMIT) + Number(playlistItemsRemainder) - 1;
     for (let i = 1; i <= requestsCount; i++) {
       this.getPlaylistItems(this.playlistId, i);
     }
@@ -56,9 +56,13 @@ export class PlaylistItemsComponent implements OnInit {
     const dialogRef = this.dialog.open(ExportOptionsComponent, {
       width: '300px'
     });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
+    dialogRef.afterClosed().subscribe((result: DialogResult) => {
+      if (result !== undefined) {
+        this.spotifyService.playlistToText(this.playlistId, result.selectedFields);
+        console.log('The dialog was closed', result);
+      }
     });
+    this.spotifyService.unsubscribeAll();
   }
 
   getArtistList(artists: Array<{name: string}>): string[] {
