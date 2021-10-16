@@ -2,16 +2,13 @@
 <mat-dialog-content>
   <p>What fields you want to export?</p>
   <mat-selection-list [(ngModel)]="selectedFields">
-    <mat-list-option class="mat-primary" value="Name" [selected]="true" [disabled]="true">
-      Name
-    </mat-list-option>
-    <mat-list-option class="mat-primary" *ngFor="let shoe of typesOfShoes" [value]="shoe">
-      {{shoe}}
+    <mat-list-option class="mat-primary" *ngFor="let field of trackFields" [value]="field.field" [selected]="field.checked">
+      {{field.field | titlecase}}
     </mat-list-option>
   </mat-selection-list>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-  <button mat-flat-button class="btn-sp" [mat-dialog-close]="selectedFields">
+  <button mat-flat-button class="btn-sp" [mat-dialog-close]="selectedFields" [disabled]="!selectedFields.length">
     <mat-icon>save_alt</mat-icon>&nbsp;Export
   </button>
 </mat-dialog-actions>
