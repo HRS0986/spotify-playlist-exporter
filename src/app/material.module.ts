@@ -11,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatInputModule } from '@angular/material/input';
 
 const materialModules = [
   MatGridListModule,
@@ -23,6 +24,7 @@ const materialModules = [
   MatDialogModule,
   MatProgressSpinnerModule,
   MatTooltipModule,
+  MatInputModule,
 ];
 
 @NgModule({

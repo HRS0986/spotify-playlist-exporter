@@ -12,6 +12,7 @@ export class ExportOptionsComponent implements OnInit {
 
   selectedFields: string[] = [];
   trackFields: TrackField[] = TRACK_FIELDS;
+  separator = '';
 
   constructor(
     private dialogRef: MatDialogRef<ExportOptionsComponent>,
