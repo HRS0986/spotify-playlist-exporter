@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL } from '../constants';
-import { SpotifyPlaylistsList, SpotifyTrackList, PlaylistMetaData, SpotifyUserDataApiObject } from '../types';
+import { Observable, Subscription } from 'rxjs';
+import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL, INITIAL_OFFSET } from '../constants';
+import {
+  SpotifyPlaylistsList,
+  SpotifyTrackList,
+  PlaylistMetaData,
+  SpotifyUserDataApiObject,
+  Track,
+  WritableTrackList, ArtistApiObject,
+} from '../types';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +23,7 @@ export class SpotifyService {
   private scope = encodeURIComponent('playlist-read-private user-read-private user-read-email playlist-read-collaborative');
   private redirectUri = encodeURIComponent('http://localhost:4200/');
   private okToPlaylists = false;
+  private subscriptions: Subscription[] = [];
 
   public authorize(): void {
     const authUrl = `https://accounts.spotify.com/authorize?client_id=${this.clientId}&response_type=token&redirect_uri=${this.redirectUri}&scope=${this.scope}`;
@@ -52,8 +60,73 @@ export class SpotifyService {
     return this.http.get<PlaylistMetaData>(endpoint);
   }
 
-  public playlistToText(playlistId: string, fields: string[], filetype: string): void {
+  public playlistToText(playlistId: string, fields: string[], filetype: string = 'csv'): void {
+    let total = 0;
+    const playlist: { tracks: Array<Track> } = { tracks: [] };
+    const fieldString = this.createFieldsString(fields);
+    console.log(fieldString);
+    const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${INITIAL_OFFSET}&fields=${fieldString}`;
+    console.log(endpoint);
+    const subscriptionFirst: Subscription = this.http.get<WritableTrackList>(endpoint).subscribe(data => {
+      total = data.total;
+      console.log(data.items);
+      for (const item of data.items) {
+        const track: Track = {
+          title: item.track.name
+        };
+        playlist.tracks.push(track);
+      }
+    });
+    this.subscriptions.push(subscriptionFirst);
 
+    const iterationCount = Math.floor(total / PLAYLISTS_LIMIT) + +(!!(total % PLAYLISTS_LIMIT)) - 1;
+    for (let i = 1; i <= iterationCount; i++) {
+      const endpointX = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${i}&fields=${fieldString}`;
+      const subscription: Subscription = this.http.get<WritableTrackList>(endpointX).subscribe(data => {
+        for (const item of data.items) {
+          const track: Track = {
+            title: item.track.name
+          };
+          playlist.tracks.push(track);
+        }
+      });
+      this.subscriptions.push(subscription);
+    }
+    console.log(playlist);
+  }
+
+  private createFieldsString(fields: string[]): string {
+    let fieldString = 'total%2C';
+    let trackString = 'items(track(';
+    if (fields.includes('album')) {
+      trackString += 'album(name),';
+    }
+    if (fields.includes('artist')) {
+      trackString += 'artists(name)';
+    }
+    for (const field of fields) {
+      if (field !== 'album' && field !== 'artist') {
+        trackString += `${field},`;
+      }
+    }
+    trackString = trackString.slice(0, -1);
+    trackString += '))';
+    fieldString += encodeURIComponent(trackString);
+    return fieldString;
+  }
+
+  public getArtistList(artists: Array<ArtistApiObject>): string[] {
+    const artistsList: string[] = [];
+    for (const artist of artists) {
+      artistsList.push(artist.name);
+    }
+    return artistsList;
+  }
+
+  public unsubscribeAll(): void {
+    for (const subscription of this.subscriptions) {
+      subscription.unsubscribe();
+    }
   }
 
 }
