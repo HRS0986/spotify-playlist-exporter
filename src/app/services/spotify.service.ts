@@ -40,8 +40,8 @@ export class SpotifyService {
     return this.http.get<SpotifyPlaylistsList>(endpoint);
   }
 
-  public getPlaylistItems(playlistId: string, offset: number): Observable<SpotifyTrackList> {
-    const fieldString = 'limit%2Ctotal%2Citems(track(name%2Cexternal_urls(spotify)%2Cduration_ms%2Cexplicit%2Calbum(name)%2Cartists(name)))';
+  public getPlaylistItemsToDisplay(playlistId: string, offset: number): Observable<SpotifyTrackList> {
+    const fieldString = 'limit%2Ctotal%2Citems(track(name%2Cartists(name)))';
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${offset}&fields=${fieldString}`;
     return this.http.get<SpotifyTrackList>(endpoint);
   }
@@ -50,6 +50,10 @@ export class SpotifyService {
     const fieldString = 'collaborative%2Cdescription%2Cfollowers(total)%2Cid%2Cname%2Cpublic';
     const endpoint = `${BASE_API_URL}playlists/${playlistId}?fields=${fieldString}`;
     return this.http.get<PlaylistMetaData>(endpoint);
+  }
+
+  public playlistToText(playlistId: string, fields: string[], filetype: string): void {
+
   }
 
 }

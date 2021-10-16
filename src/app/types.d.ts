@@ -59,7 +59,7 @@ export interface PlaylistMetaData {
 }
 
 export interface SpotifyTrackList extends SpotifyApiObject{
-  items: Array<SpotifyTrack>;
+  items: Array<{ track: DisplayTrackApiObject }>;
 }
 
 interface SpotifyTrack {
@@ -123,4 +123,14 @@ export interface Track {
 export interface TrackField {
   field: string;
   checked: boolean;
+}
+
+interface DisplayTrackApiObject {
+  name: string;
+  artists: Array<{ name: string; }>;
+}
+
+export interface DisplayTrackObject {
+  name: string;
+  artists: string[];
 }

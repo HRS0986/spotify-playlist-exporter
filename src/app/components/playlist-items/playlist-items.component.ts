@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ExportOptionsComponent } from '../export-options/export-options.component';
 import { SpotifyService } from '../../services/spotify.service';
 import { Subscription } from 'rxjs';
-import { PlaylistMetaData, Track } from '../../types';
+import { PlaylistMetaData, DisplayTrackObject } from '../../types';
 import { INITIAL_OFFSET, PLAYLIST_ITEM_LIMIT } from '../../constants';
 
 @Component({
@@ -17,7 +17,7 @@ export class PlaylistItemsComponent implements OnInit {
 
   loading = false;
   subscriptions: Subscription[] = [];
-  playlistItems: Track[] = [];
+  playlistItems: DisplayTrackObject[] = [];
   playlistMetaData!: PlaylistMetaData;
   totalTracksCount = 0;
 
@@ -39,15 +39,11 @@ export class PlaylistItemsComponent implements OnInit {
   }
 
   private getPlaylistItems(playlistId: string, offset: number): void {
-    const playlistsItemsSubscription: Subscription = this.spotifyService.getPlaylistItems(playlistId, offset).subscribe(data => {
+    const playlistsItemsSubscription: Subscription = this.spotifyService.getPlaylistItemsToDisplay(playlistId, offset).subscribe(data => {
       this.totalTracksCount = data.total;
       for (const track of data.items) {
-        const trackObject: Track = {
-          title: track.track.name,
-          album: track.track.album.name,
-          url: track.track.external_urls.spotify,
-          explicit: track.track.explicit,
-          duration: this.milliSecondsToDuration(track.track.duration_ms),
+        const trackObject: DisplayTrackObject = {
+          name: track.track.name,
           artists: this.getArtistList(track.track.artists)
         };
         this.playlistItems.push(trackObject);
