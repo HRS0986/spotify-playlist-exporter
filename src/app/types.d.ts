@@ -81,26 +81,26 @@ interface TrackApiObject {
   external_urls: {
     spotify: string;
   };
-  id: string;
+  id?: string;
   name: string;
 }
 
 interface AlbumApiObject {
-  artists: Array<ArtistApiObject>;
-  external_urls: {
+  artists?: Array<ArtistApiObject>;
+  external_urls?: {
     spotify: string;
   };
   id: string;
   name: string;
-  release_date: string;
-  total_tracks: number;
+  release_date?: string;
+  total_tracks?: number;
 }
 
 interface ArtistApiObject {
-  external_urls: {
+  external_urls?: {
     spotify: string;
   };
-  id: string;
+  id?: string;
   name: string;
 }
 
@@ -112,12 +112,39 @@ interface SpotifyApiObject {
 }
 
 export interface Track {
-  title: string;
-  album: string;
+  title?: string;
+  album?: string;
+  artists?: string[];
+  duration?: string;
+  explicit?: boolean;
+  url?: string;
+}
+
+export interface WritableTrackList {
+  items: Array<{ track: TrackApiObject }>;
+  total: number;
+}
+
+
+
+export interface TrackField {
+  field: string;
+  checked: boolean;
+}
+
+interface DisplayTrackApiObject {
+  name: string;
+  artists: Array<{ name: string; }>;
+}
+
+export interface DisplayTrackObject {
+  name: string;
   artists: string[];
-  duration: string;
-  explicit: boolean;
-  url: string;
+}
+
+export interface DialogResult {
+  separator: string;
+  selectedFields: Array<string>;
 }
 
 export interface TrackField {
