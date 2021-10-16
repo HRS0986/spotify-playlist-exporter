@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SpotifyService } from '../../services/spotify.service';
-import { SpotifyProfileData } from '../../types';
+import { PlaylistMetaData, SpotifyProfileData } from '../../types';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,6 +15,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy  {
   playlistId!: string;
   userData!: SpotifyProfileData;
   loading = false;
+  playlist!: PlaylistMetaData;
   private subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute, private spotifyService: SpotifyService) {
@@ -24,6 +25,10 @@ export class BasicLayoutComponent implements OnInit, OnDestroy  {
       this.playlistsStatus = params.playlistsStatus;
       if (this.playlistsStatus !== 'all') {
         this.playlistId = this.playlistsStatus as string;
+        const playlistMetaDataSubscription: Subscription = spotifyService.getPlaylistMetaData(this.playlistId).subscribe(data => {
+          this.playlist = data;
+        });
+        this.subscriptions.push(playlistMetaDataSubscription);
       }
     });
   }
@@ -44,7 +49,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy  {
     this.loading = false;
     this.subscriptions.push(userDataSubscription);
   }
-
 
   ngOnDestroy(): void {
     for (const subscription of this.subscriptions) {

@@ -15,26 +15,26 @@
   </div>
 </ng-template>
 <ng-template #elseBlock>
-<mat-grid-list cols="4" rowHeight="30vh">
+<mat-grid-list cols="4" rowHeight="45vh">
 
-  <mat-grid-tile [colspan]="1" [rowspan]="2">
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
     <mat-card class="mat-elevation-z8 w-95">
       <mat-card-header>
         <div mat-card-avatar></div>
         <mat-card-title>Profile Data</mat-card-title>
       </mat-card-header>
-      <img mat-card-image src="{{userData.imageUrl}}" alt="User Profile Picture">
       <mat-card-content>
+        <mat-divider></mat-divider>
         <mat-list>
           <mat-list-item>{{userData.name}}</mat-list-item>
-          <mat-list-item>{{userData.email}}</mat-list-item>
-          <mat-list-item>{{userData.product}}</mat-list-item>
+          <mat-list-item>{{userData.country}}</mat-list-item>
+          <mat-list-item>{{userData.product | titlecase}} Subscription</mat-list-item>
         </mat-list>
       </mat-card-content>
     </mat-card>
   </mat-grid-tile>
 
-  <mat-grid-tile [colspan]="3" [rowspan]="3">
+  <mat-grid-tile [colspan]="3" [rowspan]="2">
     <ng-template [ngIf]="playlistsStatus == 'all'" [ngIfElse]="elseBlock">
       <app-playlists [style]="{'width': '95%'}"></app-playlists>
     </ng-template>
@@ -51,10 +51,12 @@
         <mat-card-title>Playlist Data</mat-card-title>
       </mat-card-header>
       <mat-card-content>
+        <mat-divider></mat-divider>
         <mat-list>
-          <mat-list-item>{{userData.name}}</mat-list-item>
-          <mat-list-item>{{userData.email}}</mat-list-item>
-          <mat-list-item>{{userData.product}}</mat-list-item>
+          <mat-list-item>Name: {{playlist.name}}</mat-list-item>
+          <mat-list-item>Description: {{playlist.description}}</mat-list-item>
+          <mat-list-item>Collaborative: {{playlist.collaborative ? 'Yes': 'No'}}</mat-list-item>
+          <mat-list-item>Public: {{playlist.public ? 'Yes': 'No'}}</mat-list-item>
         </mat-list>
       </mat-card-content>
     </mat-card>
