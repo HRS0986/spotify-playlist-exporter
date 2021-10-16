@@ -5,6 +5,7 @@ import { SpotifyService } from '../../services/spotify.service';
 import { Playlist } from '../../types';
 import { Subscription } from 'rxjs';
 import { PLAYLISTS_LIMIT, INITIAL_OFFSET } from '../../constants';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-playlists',
@@ -18,14 +19,13 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
   subscriptions: Subscription[] = [];
   playlistsTotal!: number;
 
-  constructor(private dialog: MatDialog, private spotifyService: SpotifyService) { }
+  constructor(private dialog: MatDialog, private spotifyService: SpotifyService, private helperService: HelperService) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.getPlaylists(INITIAL_OFFSET);
-    const playlistsRemainder = this.playlistsTotal % PLAYLISTS_LIMIT;
-    const requestsCount = Math.floor(this.playlistsTotal / PLAYLISTS_LIMIT) + Number(playlistsRemainder) - 1;
-    for (let i = 1; i <= requestsCount; i++) {
+    const iterationCount: number = this.helperService.getRequestIterationCount(this.playlistsTotal, PLAYLISTS_LIMIT);
+    for (let i = 1; i <= iterationCount; i++) {
       this.getPlaylists(i);
     }
     this.loading = false;

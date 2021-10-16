@@ -10,13 +10,14 @@ import {
   Track,
   WritableTrackList, ArtistApiObject,
 } from '../types';
+import { HelperService } from './helper.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private helperService: HelperService) {
   }
 
   private clientId = '4d3ca951d1e44b3e8cb4732bfa790f5d';
@@ -63,64 +64,30 @@ export class SpotifyService {
   public playlistToText(playlistId: string, fields: string[], filetype: string = 'csv'): void {
     let total = 0;
     const playlist: { tracks: Array<Track> } = { tracks: [] };
-    const fieldString = this.createFieldsString(fields);
+    const fieldString = this.helperService.createSpotifyFieldsString(fields);
     console.log(fieldString);
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${INITIAL_OFFSET}&fields=${fieldString}`;
-    console.log(endpoint);
     const subscriptionFirst: Subscription = this.http.get<WritableTrackList>(endpoint).subscribe(data => {
       total = data.total;
-      console.log(data.items);
       for (const item of data.items) {
-        const track: Track = {
-          title: item.track.name
-        };
+        const track: Track = this.helperService.trackApiObject2TrackObject(item.track);
         playlist.tracks.push(track);
       }
     });
     this.subscriptions.push(subscriptionFirst);
 
-    const iterationCount = Math.floor(total / PLAYLISTS_LIMIT) + +(!!(total % PLAYLISTS_LIMIT)) - 1;
+    const iterationCount: number = this.helperService.getRequestIterationCount(total, PLAYLISTS_LIMIT);
     for (let i = 1; i <= iterationCount; i++) {
       const endpointX = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${i}&fields=${fieldString}`;
       const subscription: Subscription = this.http.get<WritableTrackList>(endpointX).subscribe(data => {
         for (const item of data.items) {
-          const track: Track = {
-            title: item.track.name
-          };
+          const track: Track = this.helperService.trackApiObject2TrackObject(item.track);
           playlist.tracks.push(track);
         }
       });
       this.subscriptions.push(subscription);
     }
     console.log(playlist);
-  }
-
-  private createFieldsString(fields: string[]): string {
-    let fieldString = 'total%2C';
-    let trackString = 'items(track(';
-    if (fields.includes('album')) {
-      trackString += 'album(name),';
-    }
-    if (fields.includes('artist')) {
-      trackString += 'artists(name)';
-    }
-    for (const field of fields) {
-      if (field !== 'album' && field !== 'artist') {
-        trackString += `${field},`;
-      }
-    }
-    trackString = trackString.slice(0, -1);
-    trackString += '))';
-    fieldString += encodeURIComponent(trackString);
-    return fieldString;
-  }
-
-  public getArtistList(artists: Array<ArtistApiObject>): string[] {
-    const artistsList: string[] = [];
-    for (const artist of artists) {
-      artistsList.push(artist.name);
-    }
-    return artistsList;
   }
 
   public unsubscribeAll(): void {

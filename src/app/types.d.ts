@@ -114,7 +114,7 @@ interface SpotifyApiObject {
 export interface Track {
   title?: string;
   album?: string;
-  artists?: string[];
+  artists?: string;
   duration?: string;
   explicit?: boolean;
   url?: string;

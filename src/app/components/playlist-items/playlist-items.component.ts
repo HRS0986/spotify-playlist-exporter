@@ -5,6 +5,7 @@ import { SpotifyService } from '../../services/spotify.service';
 import { Subscription } from 'rxjs';
 import { PlaylistMetaData, DisplayTrackObject, DialogResult } from '../../types';
 import { INITIAL_OFFSET, PLAYLIST_ITEM_LIMIT } from '../../constants';
+import { HelperService } from '../../services/helper.service';
 
 @Component({
   selector: 'app-playlist-items',
@@ -21,14 +22,13 @@ export class PlaylistItemsComponent implements OnInit {
   playlistMetaData!: PlaylistMetaData;
   totalTracksCount = 0;
 
-  constructor(private dialog: MatDialog, private spotifyService: SpotifyService) { }
+  constructor(private dialog: MatDialog, private spotifyService: SpotifyService, private helperService: HelperService) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.getPlaylistItems(this.playlistId, INITIAL_OFFSET);
-    const playlistItemsRemainder = this.totalTracksCount % PLAYLIST_ITEM_LIMIT;
-    const requestsCount = Math.floor(this.totalTracksCount / PLAYLIST_ITEM_LIMIT) + Number(playlistItemsRemainder) - 1;
-    for (let i = 1; i <= requestsCount; i++) {
+    const iterationCount: number = this.helperService.getRequestIterationCount(this.totalTracksCount, PLAYLIST_ITEM_LIMIT);
+    for (let i = 1; i <= iterationCount; i++) {
       this.getPlaylistItems(this.playlistId, i);
     }
     const playlistMetaDataSubscription: Subscription = this.spotifyService.getPlaylistMetaData(this.playlistId).subscribe(data => {
@@ -44,7 +44,7 @@ export class PlaylistItemsComponent implements OnInit {
       for (const track of data.items) {
         const trackObject: DisplayTrackObject = {
           name: track.track.name,
-          artists: this.getArtistList(track.track.artists)
+          artists: this.helperService.getArtistList(track.track.artists)
         };
         this.playlistItems.push(trackObject);
       }
@@ -63,20 +63,5 @@ export class PlaylistItemsComponent implements OnInit {
       }
     });
     this.spotifyService.unsubscribeAll();
-  }
-
-  getArtistList(artists: Array<{name: string}>): string[] {
-    const artistsList: string[] = [];
-    for (const artist of artists) {
-      artistsList.push(artist.name);
-    }
-    return artistsList;
-  }
-
-  private milliSecondsToDuration(milliSeconds: number): string {
-    let seconds = milliSeconds / 1000;
-    const minutes = Math.floor(seconds / 60);
-    seconds = seconds % 60;
-    return `${minutes}:${seconds}`;
   }
 }
