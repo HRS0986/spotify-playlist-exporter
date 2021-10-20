@@ -12,6 +12,8 @@ export const PLAYLIST_ITEM_LIMIT = 100;
 
 export const BASE_API_URL = 'https://api.spotify.com/v1/';
 
+export const DEFAULT_SEPARATOR = ',';
+
 export const TRACK_FIELDS: TrackField[] = [
   { field: 'name', checked: true },
   { field: 'artist', checked: false },

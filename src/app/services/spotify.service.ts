@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
-import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL, INITIAL_OFFSET } from '../constants';
+import { PLAYLISTS_LIMIT, PLAYLIST_ITEM_LIMIT, BASE_API_URL, INITIAL_OFFSET, DEFAULT_SEPARATOR } from '../constants';
 import {
   SpotifyPlaylistsList,
   SpotifyTrackList,
   PlaylistMetaData,
   SpotifyUserDataApiObject,
   Track,
-  WritableTrackList, ArtistApiObject,
+  WritableTrackList,
 } from '../types';
 import { HelperService } from './helper.service';
 
@@ -61,17 +61,18 @@ export class SpotifyService {
     return this.http.get<PlaylistMetaData>(endpoint);
   }
 
-  public playlistToText(playlistId: string, fields: string[], filetype: string = 'csv'): void {
+  public playlistToText(playlistId: string, fields: string[], separator: string): void {
     let total = 0;
-    const playlist: { tracks: Array<Track> } = { tracks: [] };
+    separator = separator !== '' ? separator : DEFAULT_SEPARATOR;
+    const playlist: Array<string> = [];
     const fieldString = this.helperService.createSpotifyFieldsString(fields);
-    console.log(fieldString);
     const endpoint = `${BASE_API_URL}playlists/${playlistId}/tracks?limit=${PLAYLIST_ITEM_LIMIT}&offset=${INITIAL_OFFSET}&fields=${fieldString}`;
     const subscriptionFirst: Subscription = this.http.get<WritableTrackList>(endpoint).subscribe(data => {
       total = data.total;
       for (const item of data.items) {
         const track: Track = this.helperService.trackApiObject2TrackObject(item.track);
-        playlist.tracks.push(track);
+        const trackString = this.helperService.createTrackString(track, separator);
+        playlist.push(trackString);
       }
     });
     this.subscriptions.push(subscriptionFirst);
@@ -82,12 +83,14 @@ export class SpotifyService {
       const subscription: Subscription = this.http.get<WritableTrackList>(endpointX).subscribe(data => {
         for (const item of data.items) {
           const track: Track = this.helperService.trackApiObject2TrackObject(item.track);
-          playlist.tracks.push(track);
+          const trackString = this.helperService.createTrackString(track, separator);
+          playlist.push(trackString);
         }
       });
       this.subscriptions.push(subscription);
     }
-    console.log(playlist);
+    console.log(playlist[2]);
+    // this.helperService.trackListToCSV(playlist['tracks']);
   }
 
   public unsubscribeAll(): void {

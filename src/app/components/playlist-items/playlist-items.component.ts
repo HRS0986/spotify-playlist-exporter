@@ -58,7 +58,7 @@ export class PlaylistItemsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: DialogResult) => {
       if (result !== undefined) {
-        this.spotifyService.playlistToText(this.playlistId, result.selectedFields);
+        this.spotifyService.playlistToText(this.playlistId, result.selectedFields, result.separator);
         console.log('The dialog was closed', result);
       }
     });

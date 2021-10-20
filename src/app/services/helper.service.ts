@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ArtistApiObject, Track, TrackApiObject } from '../types';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -73,5 +74,24 @@ export class HelperService {
 
   public getRequestIterationCount(total: number, limit: number): number {
     return Math.floor(total / limit) + +(!!(total % limit)) - 1;
+  }
+
+  public createTrackString(track: Track, separator: string): string {
+    let trackString = '';
+    trackString += track.title ? track.title + separator : '';
+    trackString += track.artists ? track.artists + separator : '';
+    trackString += track.album ? track.album + separator : '';
+    trackString += track.duration ? track.duration + separator : '';
+    trackString += track.url ? track.url + separator : '';
+    trackString += track.explicit ? 'Explicit' : 'Not Explicit' + separator;
+    return trackString.slice(0, -1);
+  }
+
+  public trackListToCSV(trackList: Observable<Array<Track>>): void {
+    // console.log('CSV');
+    // for (const track of trackList) {
+    //   console.log(track);
+    // }
+    // console.log('CSV');
   }
 }
