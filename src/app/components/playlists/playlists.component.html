@@ -8,7 +8,7 @@
         <button mat-flat-button class="btn-sp" style="margin-right: 15px" (click)="displayExportOptionsDialog()">
           <mat-icon>save_alt</mat-icon>&nbsp;Export Selected
         </button>
-        <button mat-flat-button class="btn-sp ml-1" (click)="displayExportOptionsDialog()">
+        <button mat-flat-button class="btn-sp ml-1" (click)="displayExportOptionsDialog('all')">
           <mat-icon>save_alt</mat-icon>&nbsp;Export All
         </button>
       </div>
@@ -27,8 +27,8 @@
   </ng-template>
   <ng-template #elseBlock>
     <mat-card-content [ngStyle]="{'height': '90%', 'overflow-y': 'auto', 'width': '70vw'}">
-      <mat-selection-list>
-        <mat-list-option *ngFor="let playlist of playlists" checkboxPosition="before">
+      <mat-selection-list [(ngModel)]="selectedPlaylistIds">
+        <mat-list-option *ngFor="let playlist of playlists" checkboxPosition="before" [value]="playlist.id">
           <div [ngStyle]="{'display': 'inline-block'}">
             <div [ngStyle]="{'float': 'left', 'display': 'flex'}">
               <div [style]="{'margin-right': '5px'}">
@@ -47,7 +47,7 @@
               <button mat-flat-button class="btn-sp" [style]="{'margin-right': '10px'}" routerLink="../{{playlist.id}}">
                 <i class="fas fa-external-link-alt"></i>&nbsp;Open Playlist
               </button>
-              <button mat-flat-button class="btn-sp" (click)="displayExportOptionsDialog()">
+              <button mat-flat-button class="btn-sp" (click)="displayExportOptionsDialog(playlist.id)">
                 <mat-icon>save_alt</mat-icon>&nbsp;Export Playlist
               </button>
             </div>

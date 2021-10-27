@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatListOption } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExportOptionsComponent } from '../export-options/export-options.component';
 import { SpotifyService } from '../../services/spotify.service';
 import { Playlist } from '../../types';
@@ -14,12 +16,18 @@ import { HelperService } from '../../services/helper.service';
 })
 export class PlaylistsComponent implements OnInit, OnDestroy  {
 
-  playlists: Playlist[] = [];
+  playlists: Array<Playlist> = [];
   loading = false;
-  subscriptions: Subscription[] = [];
+  subscriptions: Array<Subscription> = [];
   playlistsTotal!: number;
+  selectedPlaylistIds: Array<MatListOption> = [];
 
-  constructor(private dialog: MatDialog, private spotifyService: SpotifyService, private helperService: HelperService) { }
+  constructor(
+    private dialog: MatDialog,
+    private spotifyService: SpotifyService,
+    private helperService: HelperService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -49,13 +57,33 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
     this.subscriptions.push(playlistsSubscription);
   }
 
-  displayExportOptionsDialog(): void {
-    const dialogRef = this.dialog.open(ExportOptionsComponent, {
-      width: '300px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
+  displayExportOptionsDialog(playlistId: string = 'multiple'): void {
+    if (this.selectedPlaylistIds.length === 0 && playlistId === 'multiple') {
+      this.snackBar.open('At least select one playlist', 'OK', {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 7000
+      });
+    } else {
+      const dialogRef = this.dialog.open(ExportOptionsComponent, {
+        width: '300px'
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && playlistId !== 'multiple') {
+          this.spotifyService.playlistToText(playlistId, result.selectedFields, result.separator);
+        } else if (result !== undefined && playlistId === 'all') {
+          for (const playlist of this.playlists) {
+            console.log(playlist.id);
+            this.spotifyService.playlistToText(playlist.id, result.selectedFields, result.separator);
+          }
+        } else if (result !== undefined && playlistId === 'multiple') {
+          for (const selectedPlaylistId of this.selectedPlaylistIds) {
+            console.log(selectedPlaylistId);
+            this.spotifyService.playlistToText(String(selectedPlaylistId), result.selectedFields, result.separator);
+          }
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
