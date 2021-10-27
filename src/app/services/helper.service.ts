@@ -83,15 +83,30 @@ export class HelperService {
     trackString += track.album ? track.album + separator : '';
     trackString += track.duration ? track.duration + separator : '';
     trackString += track.url ? track.url + separator : '';
-    trackString += track.explicit ? 'Explicit' : 'Not Explicit' + separator;
+    if (track.explicit !== undefined){
+      trackString += (track.explicit ? 'Explicit' : 'Not Explicit') + separator;
+    }
     return trackString.slice(0, -1);
   }
 
-  public trackListToCSV(trackList: Observable<Array<Track>>): void {
-    // console.log('CSV');
-    // for (const track of trackList) {
-    //   console.log(track);
-    // }
-    // console.log('CSV');
+  public createHeaderString(headers: Array<string>, separator: string): string {
+    console.log(headers);
+    let headerString = `Number${separator}`;
+    headerString += headers.includes('name') ? `Title${separator}` : '';
+    headerString += headers.includes('artists') ? `Artists${separator}` : '';
+    headerString += headers.includes('album') ? `Album${separator}` : '';
+    headerString += headers.includes('duration') ? `Duration${separator}` : '';
+    headerString += headers.includes('url') ? `URL${separator}` : '';
+    headerString += headers.includes('explicit') ? `ExplicitStatus${separator}` : '';
+    return headerString.slice(0, -1);
+  }
+
+  public trackListToCSV(trackStringList: Array<string>, separator: string, headers: Array<string>): string {
+    let csvString = '';
+    const headerString = this.createHeaderString(headers, separator);
+    csvString += headerString + '\n';
+    const tracksString = trackStringList.join('\n');
+    csvString += tracksString;
+    return csvString;
   }
 }
