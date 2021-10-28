@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ArtistApiObject, Track, TrackApiObject } from '../types';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +7,7 @@ import { Observable } from 'rxjs';
 export class HelperService {
 
   constructor() { }
+  filename = 'PlaylistCSV.csv';
 
   public milliSecondsToDuration(milliSeconds: number): string {
     let seconds = milliSeconds / 1000;
@@ -86,12 +86,12 @@ export class HelperService {
     if (track.explicit !== undefined){
       trackString += (track.explicit ? 'Explicit' : 'Not Explicit') + separator;
     }
-    return trackString.slice(0, -1);
+    return trackString.split(separator).slice(0, -1).join(separator);
   }
 
   public createHeaderString(headers: Array<string>, separator: string): string {
     console.log(headers);
-    let headerString = `Number${separator}`;
+    let headerString = headers.includes('number') ? `Number${separator}` : '';
     headerString += headers.includes('name') ? `Title${separator}` : '';
     headerString += headers.includes('artists') ? `Artists${separator}` : '';
     headerString += headers.includes('album') ? `Album${separator}` : '';
@@ -101,12 +101,43 @@ export class HelperService {
     return headerString.slice(0, -1);
   }
 
-  public trackListToCSV(trackStringList: Array<string>, separator: string, headers: Array<string>): string {
+  public trackListToCSVString(trackStringList: Array<string>, separator: string, headers: Array<string>): string {
     let csvString = '';
-    const headerString = this.createHeaderString(headers, separator);
-    csvString += headerString + '\n';
-    const tracksString = trackStringList.join('\n');
+    if (headers.includes('headers')) {
+      const headerString = this.createHeaderString(headers, separator);
+      csvString += headerString + '\n';
+    }
+
+    let tracksString = '';
+    if (headers.includes('number')) {
+      for (let i = 1; i <= trackStringList.length; i++) {
+        tracksString += `${i}${separator}${trackStringList[i - 1]}\n`;
+      }
+    } else {
+      tracksString = trackStringList.join('\n');
+    }
+
     csvString += tracksString;
+    this.exportToCSV(csvString);
     return csvString;
+  }
+
+  private exportToCSV(content: string): void {
+    const blob = new Blob([content], { type: 'text/csv:charset=utf-8' });
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, this.filename);
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', this.filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 }

@@ -130,6 +130,7 @@ export interface WritableTrackList {
 export interface TrackField {
   field: string;
   checked: boolean;
+  displayName: string;
 }
 
 interface DisplayTrackApiObject {
@@ -145,11 +146,6 @@ export interface DisplayTrackObject {
 export interface DialogResult {
   separator: string;
   selectedFields: Array<string>;
-}
-
-export interface TrackField {
-  field: string;
-  checked: boolean;
 }
 
 interface DisplayTrackApiObject {

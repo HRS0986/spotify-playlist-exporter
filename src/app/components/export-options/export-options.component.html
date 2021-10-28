@@ -3,7 +3,7 @@
   <p>What fields you want to export?</p>
   <mat-selection-list [(ngModel)]="selectedFields">
     <mat-list-option class="mat-primary" *ngFor="let field of trackFields" [value]="field.field" [selected]="field.checked">
-      {{field.field | titlecase}}
+      {{field.displayName}}
     </mat-list-option>
   </mat-selection-list>
   <mat-divider></mat-divider>

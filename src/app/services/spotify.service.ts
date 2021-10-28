@@ -74,7 +74,7 @@ export class SpotifyService {
         const trackString = this.helperService.createTrackString(track, separator);
         playlist.push(trackString);
         if (playlist.length === total) {
-          const csvString = this.helperService.trackListToCSV(playlist, separator, fields);
+          const csvString = this.helperService.trackListToCSVString(playlist, separator, fields);
           console.log(csvString);
         }
       }
@@ -88,7 +88,7 @@ export class SpotifyService {
             playlist.push(trackString);
           }
           if (playlist.length === total) {
-            const csvString = this.helperService.trackListToCSV(playlist, separator, fields);
+            const csvString = this.helperService.trackListToCSVString(playlist, separator, fields);
             console.log(csvString);
           }
         });
