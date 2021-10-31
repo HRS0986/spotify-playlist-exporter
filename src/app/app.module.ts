@@ -3,16 +3,45 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { PlaylistsComponent } from './components/playlists/playlists.component';
+import { PlaylistItemsComponent } from './components/playlist-items/playlist-items.component';
+import { BasicLayoutComponent } from './components/basic-layout/basic-layout.component';
+import { StartupComponent } from './components/startup/startup.component';
+import { ExportOptionsComponent } from './components/export-options/export-options.component';
+
+import { MaterialModule } from './material.module';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS  } from '@angular/common/http';
+import { PlaylistGuard } from './guards/playlist.guard';
+import { TokenInterceptor } from './helpers/token.interceptor';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PlaylistsComponent,
+    PlaylistItemsComponent,
+    BasicLayoutComponent,
+    StartupComponent,
+    ExportOptionsComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MaterialModule,
+    FormsModule,
+    HttpClientModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [
+    PlaylistGuard,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [ExportOptionsComponent],
 })
 export class AppModule { }

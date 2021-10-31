@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>Export Options</h1>
+<mat-dialog-content>
+  <p>What fields you want to export?</p>
+  <mat-selection-list [(ngModel)]="selectedFields">
+    <mat-list-option class="mat-primary" *ngFor="let field of trackFields" [value]="field.field" [selected]="field.checked">
+      {{field.displayName}}
+    </mat-list-option>
+  </mat-selection-list>
+  <mat-divider></mat-divider>
+  <mat-form-field [floatLabel]="'never'" [style]="{'width': '100%'}">
+    <input matInput placeholder="Field Separator" [(ngModel)]="separator">
+    <mat-hint align="start"><strong>Default is separator is comma</strong></mat-hint>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button
+    mat-flat-button class="btn-sp"
+    [mat-dialog-close]="{selectedFields: selectedFields, separator: separator}"
+    [disabled]="!selectedFields.length">
+    <mat-icon>save_alt</mat-icon>&nbsp;Export
+  </button>
+</mat-dialog-actions>

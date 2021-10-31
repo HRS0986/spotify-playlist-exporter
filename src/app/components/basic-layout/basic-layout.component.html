@@ -1,0 +1,67 @@
+<mat-toolbar [ngStyle]="{'background': '#1ED760', 'margin-bottom':'10px'}">
+  <i class="fab fa-2x fa-spotify"></i>
+  <span>&nbsp; Spotify Playlist Exporter</span>
+  <span></span>
+</mat-toolbar>
+
+<ng-template [ngIf]="loading" [ngIfElse]="elseBlock">
+  <div class="container d-flex align-content-center flex-wrap"  style="height: 100vh;">
+    <div class="row d-flex justify-content-center w-100">
+      <mat-spinner></mat-spinner>
+    </div>
+    <div class="row w-100 mt-5">
+      <p class="mat-display-2 d-flex justify-content-center">Please Wait</p>
+    </div>
+  </div>
+</ng-template>
+<ng-template #elseBlock>
+<mat-grid-list cols="4" rowHeight="45vh">
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <mat-card class="mat-elevation-z8 w-95">
+      <mat-card-header>
+        <div mat-card-avatar></div>
+        <mat-card-title>Profile Data</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <mat-list-item>{{userData.name}}</mat-list-item>
+          <mat-list-item>{{userData.country}}</mat-list-item>
+          <mat-list-item>{{userData.product | titlecase}} Subscription</mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="3" [rowspan]="2">
+    <ng-template [ngIf]="playlistsStatus == 'all'" [ngIfElse]="elseBlock">
+      <app-playlists [style]="{'width': '95%'}"></app-playlists>
+    </ng-template>
+    <ng-template #elseBlock>
+      <app-playlist-items [style]="{'width': '95%'}" [playlistId]="playlistId"></app-playlist-items>
+    </ng-template>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <ng-template [ngIf]="playlistsStatus != 'all'">
+    <mat-card class="mat-elevation-z8 w-95">
+      <mat-card-header>
+        <div mat-card-avatar></div>
+        <mat-card-title>Playlist Data</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-list>
+          <mat-list-item>Name: {{playlist.name}}</mat-list-item>
+          <mat-list-item>Description: {{playlist.description}}</mat-list-item>
+          <mat-list-item>Collaborative: {{playlist.collaborative ? 'Yes': 'No'}}</mat-list-item>
+          <mat-list-item>Public: {{playlist.public ? 'Yes': 'No'}}</mat-list-item>
+        </mat-list>
+      </mat-card-content>
+    </mat-card>
+    </ng-template>
+  </mat-grid-tile>
+
+</mat-grid-list>
+</ng-template>
