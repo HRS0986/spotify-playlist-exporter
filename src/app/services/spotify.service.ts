@@ -61,8 +61,9 @@ export class SpotifyService {
     return this.http.get<PlaylistMetaData>(endpoint);
   }
 
-  public  playlistToText(playlistId: string, fields: string[], separator: string): void {
+  public playlistToText(playlistId: string, fields: string[], separator: string, playlistName: string): void {
     let total = 0;
+    console.log(playlistId);
     separator = separator !== '' ? separator : DEFAULT_SEPARATOR;
     const playlist: Array<string> = [];
     const fieldString = this.helperService.createSpotifyFieldsString(fields);
@@ -74,8 +75,8 @@ export class SpotifyService {
         const trackString = this.helperService.createTrackString(track, separator);
         playlist.push(trackString);
         if (playlist.length === total) {
-          const csvString = this.helperService.trackListToCSVString(playlist, separator, fields);
-          console.log(csvString);
+          const blob = this.helperService.trackListToCSVString(playlist, separator, fields, playlistName);
+          this.helperService.exportToCSV(blob);
         }
       }
       const iterationCount: number = this.helperService.getRequestIterationCount(total, PLAYLIST_ITEM_LIMIT);
@@ -88,8 +89,8 @@ export class SpotifyService {
             playlist.push(trackString);
           }
           if (playlist.length === total) {
-            const csvString = this.helperService.trackListToCSVString(playlist, separator, fields);
-            console.log(csvString);
+            const blob = this.helperService.trackListToCSVString(playlist, separator, fields, playlistName);
+            this.helperService.exportToCSV(blob);
           }
         });
         this.subscriptions.push(childSubscription);

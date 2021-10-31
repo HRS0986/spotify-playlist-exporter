@@ -20,7 +20,7 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
   loading = false;
   subscriptions: Array<Subscription> = [];
   playlistsTotal!: number;
-  selectedPlaylistIds: Array<MatListOption> = [];
+  selectedPlaylists: Array<{ id: string, name: string }> = [];
 
   constructor(
     private dialog: MatDialog,
@@ -36,7 +36,6 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
     for (let i = 1; i <= iterationCount; i++) {
       this.getPlaylists(i);
     }
-    this.loading = false;
   }
 
   private getPlaylists(offset: number): void {
@@ -53,12 +52,13 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
         };
         this.playlists.push(playlistsObject);
       }
+      this.loading = false;
     });
     this.subscriptions.push(playlistsSubscription);
   }
 
-  displayExportOptionsDialog(playlistId: string = 'multiple'): void {
-    if (this.selectedPlaylistIds.length === 0 && playlistId === 'multiple') {
+  displayExportOptionsDialog(playlistId: string = 'multiple', playlistName: string = ''): void {
+    if (this.selectedPlaylists.length === 0 && playlistId === 'multiple') {
       this.snackBar.open('At least select one playlist', 'OK', {
         horizontalPosition: 'center',
         verticalPosition: 'top',
@@ -69,17 +69,15 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
         width: '300px'
       });
       dialogRef.afterClosed().subscribe(result => {
-        if (result !== undefined && playlistId !== 'multiple') {
-          this.spotifyService.playlistToText(playlistId, result.selectedFields, result.separator);
-        } else if (result !== undefined && playlistId === 'all') {
+        if (result !== undefined && playlistId !== 'multiple' && playlistId !== 'all') { // Single playlist export
+          this.spotifyService.playlistToText(playlistId, result.selectedFields, result.separator, playlistName);
+        } else if (result !== undefined && playlistId === 'all') { // All playlists export
           for (const playlist of this.playlists) {
-            console.log(playlist.id);
-            this.spotifyService.playlistToText(playlist.id, result.selectedFields, result.separator);
+            this.spotifyService.playlistToText(playlist.id, result.selectedFields, result.separator, playlist.name);
           }
-        } else if (result !== undefined && playlistId === 'multiple') {
-          for (const selectedPlaylistId of this.selectedPlaylistIds) {
-            console.log(selectedPlaylistId);
-            this.spotifyService.playlistToText(String(selectedPlaylistId), result.selectedFields, result.separator);
+        } else if (result !== undefined && playlistId === 'multiple') { // Selected playlists export
+          for (const selectedPlaylist of this.selectedPlaylists) {
+            this.spotifyService.playlistToText(selectedPlaylist.id, result.selectedFields, result.separator, selectedPlaylist.name);
           }
         }
       });

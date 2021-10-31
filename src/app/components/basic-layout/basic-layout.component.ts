@@ -44,7 +44,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy  {
         imageUrl: data.images[0].url,
         email: data.email
       };
-      console.log(data);
     });
     this.loading = false;
     this.subscriptions.push(userDataSubscription);

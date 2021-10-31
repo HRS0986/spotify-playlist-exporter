@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
-import { ArtistApiObject, Track, TrackApiObject } from '../types';
+import {Injectable} from '@angular/core';
+import {ArtistApiObject, Track, TrackApiObject} from '../types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HelperService {
 
-  constructor() { }
-  filename = 'PlaylistCSV.csv';
+  constructor() {
+  }
+
+  filename = 'PlaylistCSV - ';
+  csvBlobs: Array<Blob> = [];
 
   public milliSecondsToDuration(milliSeconds: number): string {
     let seconds = milliSeconds / 1000;
@@ -16,7 +19,7 @@ export class HelperService {
     return `${minutes}:${seconds}`;
   }
 
-  public getArtistList(artists: Array<{name: string} | ArtistApiObject>): Array<string> {
+  public getArtistList(artists: Array<{ name: string } | ArtistApiObject>): Array<string> {
     const artistsList: Array<string> = [];
     for (const artist of artists) {
       artistsList.push(artist.name);
@@ -83,7 +86,7 @@ export class HelperService {
     trackString += track.album ? track.album + separator : '';
     trackString += track.duration ? track.duration + separator : '';
     trackString += track.url ? track.url + separator : '';
-    if (track.explicit !== undefined){
+    if (track.explicit !== undefined) {
       trackString += (track.explicit ? 'Explicit' : 'Not Explicit') + separator;
     }
     return trackString.split(separator).slice(0, -1).join(separator);
@@ -101,8 +104,9 @@ export class HelperService {
     return headerString.slice(0, -1);
   }
 
-  public trackListToCSVString(trackStringList: Array<string>, separator: string, headers: Array<string>): string {
+  public trackListToCSVString(trackStringList: Array<string>, separator: string, headers: Array<string>, playlistName: string): Blob {
     let csvString = '';
+    this.filename = `${playlistName}.csv`;
     if (headers.includes('headers')) {
       const headerString = this.createHeaderString(headers, separator);
       csvString += headerString + '\n';
@@ -118,12 +122,10 @@ export class HelperService {
     }
 
     csvString += tracksString;
-    this.exportToCSV(csvString);
-    return csvString;
+    return new Blob([csvString], {type: 'text/csv:charset=utf-8'});
   }
 
-  private exportToCSV(content: string): void {
-    const blob = new Blob([content], { type: 'text/csv:charset=utf-8' });
+  public exportToCSV(blob: Blob): void {
     if (navigator.msSaveBlob) {
       navigator.msSaveBlob(blob, this.filename);
     } else {
