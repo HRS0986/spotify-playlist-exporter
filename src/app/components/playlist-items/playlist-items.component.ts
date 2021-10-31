@@ -27,15 +27,16 @@ export class PlaylistItemsComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.getPlaylistItems(this.playlistId, INITIAL_OFFSET);
+    this.loading = true;
     const iterationCount: number = this.helperService.getRequestIterationCount(this.totalTracksCount, PLAYLIST_ITEM_LIMIT);
     for (let i = 1; i <= iterationCount; i++) {
       this.getPlaylistItems(this.playlistId, i);
     }
     const playlistMetaDataSubscription: Subscription = this.spotifyService.getPlaylistMetaData(this.playlistId).subscribe(data => {
       this.playlistMetaData = data;
+      this.loading = false;
     });
     this.subscriptions.push(playlistMetaDataSubscription);
-    this.loading = false;
   }
 
   private getPlaylistItems(playlistId: string, offset: number): void {
@@ -48,6 +49,7 @@ export class PlaylistItemsComponent implements OnInit {
         };
         this.playlistItems.push(trackObject);
       }
+      this.loading = false;
     });
     this.subscriptions.push(playlistsItemsSubscription);
   }
@@ -58,8 +60,7 @@ export class PlaylistItemsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe((result: DialogResult) => {
       if (result !== undefined) {
-        this.spotifyService.playlistToText(this.playlistId, result.selectedFields);
-        console.log('The dialog was closed', result);
+        this.spotifyService.playlistToText(this.playlistId, result.selectedFields, result.separator, this.playlistMetaData.name);
       }
     });
     this.spotifyService.unsubscribeAll();

@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const materialModules = [
   MatGridListModule,
@@ -25,6 +26,7 @@ const materialModules = [
   MatProgressSpinnerModule,
   MatTooltipModule,
   MatInputModule,
+  MatSnackBarModule,
 ];
 
 @NgModule({

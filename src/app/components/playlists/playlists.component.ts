@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatListOption } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ExportOptionsComponent } from '../export-options/export-options.component';
 import { SpotifyService } from '../../services/spotify.service';
 import { Playlist } from '../../types';
@@ -14,12 +16,18 @@ import { HelperService } from '../../services/helper.service';
 })
 export class PlaylistsComponent implements OnInit, OnDestroy  {
 
-  playlists: Playlist[] = [];
+  playlists: Array<Playlist> = [];
   loading = false;
-  subscriptions: Subscription[] = [];
+  subscriptions: Array<Subscription> = [];
   playlistsTotal!: number;
+  selectedPlaylists: Array<{ id: string, name: string }> = [];
 
-  constructor(private dialog: MatDialog, private spotifyService: SpotifyService, private helperService: HelperService) { }
+  constructor(
+    private dialog: MatDialog,
+    private spotifyService: SpotifyService,
+    private helperService: HelperService,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -28,7 +36,6 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
     for (let i = 1; i <= iterationCount; i++) {
       this.getPlaylists(i);
     }
-    this.loading = false;
   }
 
   private getPlaylists(offset: number): void {
@@ -45,17 +52,36 @@ export class PlaylistsComponent implements OnInit, OnDestroy  {
         };
         this.playlists.push(playlistsObject);
       }
+      this.loading = false;
     });
     this.subscriptions.push(playlistsSubscription);
   }
 
-  displayExportOptionsDialog(): void {
-    const dialogRef = this.dialog.open(ExportOptionsComponent, {
-      width: '300px'
-    });
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
+  displayExportOptionsDialog(playlistId: string = 'multiple', playlistName: string = ''): void {
+    if (this.selectedPlaylists.length === 0 && playlistId === 'multiple') {
+      this.snackBar.open('At least select one playlist', 'OK', {
+        horizontalPosition: 'center',
+        verticalPosition: 'top',
+        duration: 7000
+      });
+    } else {
+      const dialogRef = this.dialog.open(ExportOptionsComponent, {
+        width: '300px'
+      });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result !== undefined && playlistId !== 'multiple' && playlistId !== 'all') { // Single playlist export
+          this.spotifyService.playlistToText(playlistId, result.selectedFields, result.separator, playlistName);
+        } else if (result !== undefined && playlistId === 'all') { // All playlists export
+          for (const playlist of this.playlists) {
+            this.spotifyService.playlistToText(playlist.id, result.selectedFields, result.separator, playlist.name);
+          }
+        } else if (result !== undefined && playlistId === 'multiple') { // Selected playlists export
+          for (const selectedPlaylist of this.selectedPlaylists) {
+            this.spotifyService.playlistToText(selectedPlaylist.id, result.selectedFields, result.separator, selectedPlaylist.name);
+          }
+        }
+      });
+    }
   }
 
   ngOnDestroy(): void {
